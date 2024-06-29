@@ -1,16 +1,16 @@
-/* eslint-disable react/prop-types */
-import  { useState } from "react";
+import { useState } from "react";
 import {
   LightModeOutlined,
   DarkModeOutlined,
   Menu as MenuIcon,
   Search,
-  SettingsOutlined,
   ArrowDropDownOutlined,
+  Person,
+  Logout,
 } from "@mui/icons-material";
 import FlexBetween from "./FlexBetween";
 import { useDispatch } from "react-redux";
-import { setMode } from "../state";
+import { setMode } from "../store/global/globalSlice";
 import profileImage from "../assets/profile.jpeg";
 import {
   AppBar,
@@ -40,6 +40,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
         position: "static",
         background: "none",
         boxshadow: "none",
+        width: "100%",
       }}
     >
       <Toolbar sx={{ justifyContent: "space-between" }}>
@@ -60,6 +61,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
             </IconButton>
           </FlexBetween>
         </FlexBetween>
+
         {/** Right side */}
         <FlexBetween gap="1.5rem">
           <IconButton onClick={() => dispatch(setMode())}>
@@ -69,11 +71,10 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
               <LightModeOutlined sx={{ fontSize: "25px" }} />
             )}
           </IconButton>
-          <IconButton>
-            <SettingsOutlined sx={{ fontSize: "25px" }} />
-          </IconButton>
+
           <FlexBetween>
             <Button
+              id="dropDown"
               onClick={handleClick}
               sx={{
                 display: "flex",
@@ -92,36 +93,64 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
                 borderRadius="50px"
                 sx={{ objectFit: "cover" }}
               />
+
               <Box textAlign="left">
                 <Typography
                   fontWeight="bold"
                   fontSize="0.85rem"
                   sx={{ color: theme.palette.secondary[100] }}
                 >
-                  {user.name}
+                  laqees
                 </Typography>
 
                 <Typography
                   fontSize="0.75rem"
                   sx={{ color: theme.palette.secondary[200] }}
                 >
-                  {user.occupation}
+                  Admin
                 </Typography>
               </Box>
+
               <ArrowDropDownOutlined
                 sx={{ color: theme.palette.secondary[300], fontSize: "25px" }}
               />
             </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={isOpen}
-              onClose={handleClose}
-              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            >
-              <MenuItem onClick={handleClose}>Log out</MenuItem>
-            </Menu>
           </FlexBetween>
         </FlexBetween>
+        <Menu
+          id="dropDown"
+          anchorEl={anchorEl}
+          open={isOpen}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+        >
+          <MenuItem
+            onClick={handleClose}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              color: theme.palette.secondary[200],
+            }}
+          >
+            Profile
+            <Person sx={{ marginLeft: "50px" }} />
+          </MenuItem>
+
+          <MenuItem
+            onClick={handleClose}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              color: theme.palette.secondary[200],
+            }}
+          >
+            Log out
+            <Logout sx={{ marginLeft: "50px" }} />
+          </MenuItem>
+        </Menu>
       </Toolbar>
     </AppBar>
   );
