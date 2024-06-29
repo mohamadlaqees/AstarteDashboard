@@ -15,16 +15,12 @@ import {
   ChevronLeft,
   ChevronRightOutlined,
   HomeOutlined,
-  ShoppingCartOutlined,
-  Groups2Outlined,
-  ReceiptLongOutlined,
-  PublicOutlined,
-  PointOfSaleOutlined,
-  TodayOutlined,
-  CalendarMonthOutlined,
-  AdminPanelSettingsOutlined,
-  TrendingUpOutlined,
-  PieChartOutlined,
+  Group,
+  AccountBalance,
+  TravelExplore,
+  Payment,
+  Paid,
+  Summarize,
 } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -36,56 +32,32 @@ const navItems = [
     icon: <HomeOutlined />,
   },
   {
-    text: "Client Facing",
+    text: "Managing",
     icon: null,
   },
   {
-    text: "Products",
-    icon: <ShoppingCartOutlined />,
+    text: "Users",
+    icon: <Group />,
   },
   {
-    text: "Customers",
-    icon: <Groups2Outlined />,
+    text: "Artifacts",
+    icon: <AccountBalance />,
   },
   {
-    text: "Transactions",
-    icon: <ReceiptLongOutlined />,
+    text: "Tours",
+    icon: <TravelExplore />,
   },
   {
-    text: "Geography",
-    icon: <PublicOutlined />,
+    text: "Payments",
+    icon: <Payment />,
   },
   {
-    text: "Sales",
-    icon: null,
+    text: "Imapct funds",
+    icon: <Paid />,
   },
   {
-    text: "Overview",
-    icon: <PointOfSaleOutlined />,
-  },
-  {
-    text: "Daily",
-    icon: <TodayOutlined />,
-  },
-  {
-    text: "Monthly",
-    icon: <CalendarMonthOutlined />,
-  },
-  {
-    text: "Breakdown",
-    icon: <PieChartOutlined />,
-  },
-  {
-    text: "Management",
-    icon: null,
-  },
-  {
-    text: "Admin",
-    icon: <AdminPanelSettingsOutlined />,
-  },
-  {
-    text: "Performance",
-    icon: <TrendingUpOutlined />,
+    text: "Reports",
+    icon: <Summarize />,
   },
 ];
 const Sidebar = ({
@@ -145,7 +117,8 @@ const Sidebar = ({
                     </Typography>
                   );
                 }
-                const lcText = text.toLowerCase();
+                const lcText =
+                  text == "Imapct funds" ? "funds" : text.toLowerCase();
 
                 return (
                   <ListItem key={text} disablePadding>
