@@ -5,6 +5,8 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Users from "./pages/Users/Users";
 import Artifacts from "./pages/Artifacts/Artifacts";
 import Layout from "./Layout/Layout";
+import UserProfile from "./pages/Users/UserProfile";
+import User from "./pages/Users/User";
 
 const App = () => {
   const { theme } = useMode();
@@ -23,7 +25,16 @@ const App = () => {
         },
         {
           path: "users",
-          element: <Users />,
+          children: [
+            {
+              index: true,
+              element: <Users />,
+            },
+            {
+              path: ":userId",
+              element: <User />, 
+            },
+          ],
         },
 
         {
