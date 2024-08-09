@@ -3,6 +3,7 @@ import useMode from "./hooks/useMode";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Users from "./pages/Users/Users";
+import User from "./pages/Users/User";
 import Artifacts from "./pages/Artifacts/Artifacts";
 import Layout from "./Layout/Layout";
 import Projects from "./pages/Projects/Projects";
