@@ -72,6 +72,10 @@ const navItems = [
     ],
   },
   {
+    text: "Projects",
+    icon: <Work />,
+  },
+  {
     text: "Imapct funds",
     icon: <Paid />,
     routes: [
