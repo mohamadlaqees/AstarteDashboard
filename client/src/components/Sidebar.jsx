@@ -23,6 +23,7 @@ import {
   Summarize,
   ExpandLess,
   ExpandMore,
+  Work,
 } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -74,6 +75,7 @@ const navItems = [
   {
     text: "Projects",
     icon: <Work />,
+    routes: [],
   },
   {
     text: "Imapct funds",
@@ -92,8 +94,6 @@ const navItems = [
     ],
   },
 ];
-
-
 
 const Sidebar = ({
   drawerWidth,
