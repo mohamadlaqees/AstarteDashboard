@@ -1,9 +1,16 @@
 /* eslint-disable react/prop-types */
-import { Box, Typography,useTheme} from "@mui/material";
+import { Box, Typography, Button, useTheme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ title, subtitle }) => {
-    const theme = useTheme();
-    return (
+  const theme = useTheme();
+  const navigate = useNavigate();
+
+  const handleAddUser = () => {
+    navigate("/users/new");
+  };
+
+  return (
     <Box>
       <Typography
         variant="h2"
@@ -16,6 +23,7 @@ const Header = ({ title, subtitle }) => {
       <Typography variant="h5" color={theme.palette.secondary[300]}>
         {subtitle}
       </Typography>
+      
     </Box>
   );
 };

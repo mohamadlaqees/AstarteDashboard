@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import {
   Box,
   Drawer,
@@ -10,6 +9,7 @@ import {
   ListItemText,
   Typography,
   useTheme,
+  Collapse,
 } from "@mui/material";
 import {
   ChevronLeft,
@@ -21,6 +21,8 @@ import {
   Payment,
   Paid,
   Summarize,
+  ExpandLess,
+  ExpandMore,
 } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -30,36 +32,65 @@ const navItems = [
   {
     text: "Dashboard",
     icon: <HomeOutlined />,
+    routes: [],
   },
   {
     text: "Managing",
     icon: null,
+    routes: [],
   },
   {
     text: "Users",
     icon: <Group />,
+    routes: [
+      { path: "users", label: "All Users" },
+      { path: "users/new", label: "New User" },
+    ],
   },
   {
     text: "Artifacts",
     icon: <AccountBalance />,
+    routes: [
+      { path: "artifacts", label: "All Artifacts" },
+      { path: "artifacts/new", label: "New Artifact" },
+    ],
   },
   {
     text: "Tours",
     icon: <TravelExplore />,
+    routes: [
+      { path: "tours", label: "All Tours" },
+      { path: "tours/new", label: "New Tour" },
+    ],
   },
   {
     text: "Payments",
     icon: <Payment />,
+    routes: [
+      { path: "payments", label: "All Payments" },
+      { path: "payments/new", label: "New Payment" },
+    ],
   },
   {
     text: "Imapct funds",
     icon: <Paid />,
+    routes: [
+      { path: "funds", label: "All Funds" },
+      { path: "funds/new", label: "New Fund" },
+    ],
   },
   {
     text: "Reports",
     icon: <Summarize />,
+    routes: [
+      { path: "reports", label: "All Reports" },
+      { path: "reports/new", label: "New Report" },
+    ],
   },
 ];
+
+
+
 const Sidebar = ({
   drawerWidth,
   isSidebarOpen,
@@ -68,12 +99,18 @@ const Sidebar = ({
 }) => {
   const { pathname } = useLocation();
   const [active, setActive] = useState("");
+  const [open, setOpen] = useState({});
   const navigate = useNavigate();
   const theme = useTheme();
 
   useEffect(() => {
     setActive(pathname.substring(1));
   }, [pathname]);
+
+  const handleClick = (text) => {
+    setOpen((prevOpen) => ({ ...prevOpen, [text]: !prevOpen[text] }));
+  };
+
   return (
     <Box component="nav">
       {isSidebarOpen && (
@@ -109,7 +146,7 @@ const Sidebar = ({
               </FlexBetween>
             </Box>
             <List>
-              {navItems.map(({ text, icon }) => {
+              {navItems.map(({ text, icon, routes }) => {
                 if (!icon) {
                   return (
                     <Typography key={text} sx={{ m: "30px 0 5px 20px " }}>
@@ -117,44 +154,55 @@ const Sidebar = ({
                     </Typography>
                   );
                 }
-                const lcText =
-                  text == "Imapct funds" ? "funds" : text.toLowerCase();
 
                 return (
-                  <ListItem key={text} disablePadding>
-                    <ListItemButton
-                      onClick={() => {
-                        navigate(`/${lcText}`);
-                        setActive(lcText);
-                      }}
-                      sx={{
-                        backgroundColor:
-                          active === lcText
-                            ? theme.palette.secondary[300]
-                            : "transparent",
-                        color:
-                          active === lcText
-                            ? theme.palette.primary[600]
-                            : theme.palette.secondary[100],
-                      }}
-                    >
-                      <ListItemIcon
+                  <Box key={text}>
+                    <ListItem disablePadding>
+                      <ListItemButton
+                        onClick={() => handleClick(text)}
                         sx={{
-                          ml: "2rem",
+                          backgroundColor:
+                            active === text.toLowerCase()
+                              ? theme.palette.secondary[300]
+                              : "transparent",
                           color:
-                            active === lcText
+                            active === text.toLowerCase()
                               ? theme.palette.primary[600]
-                              : theme.palette.secondary[200],
+                              : theme.palette.secondary[100],
                         }}
                       >
-                        {icon}
-                      </ListItemIcon>
-                      <ListItemText primary={text} />
-                      {active === lcText && (
-                        <ChevronRightOutlined sx={{ ml: "auto " }} />
-                      )}
-                    </ListItemButton>
-                  </ListItem>
+                        <ListItemIcon
+                          sx={{
+                            ml: "2rem",
+                            color:
+                              active === text.toLowerCase()
+                                ? theme.palette.primary[600]
+                                : theme.palette.secondary[200],
+                          }}
+                        >
+                          {icon}
+                        </ListItemIcon>
+                        <ListItemText primary={text} />
+                        {open[text] ? <ExpandLess /> : <ExpandMore />}
+                      </ListItemButton>
+                    </ListItem>
+                    <Collapse in={open[text]} timeout="auto" unmountOnExit>
+                      <List component="div" disablePadding>
+                        {routes.map(({ path, label }) => (
+                          <ListItemButton
+                            key={path}
+                            sx={{ pl: 13 }}
+                            onClick={() => {
+                              navigate(`/${path}`);
+                              setActive(path);
+                            }}
+                          >
+                            <ListItemText primary={label} />
+                          </ListItemButton>
+                        ))}
+                      </List>
+                    </Collapse>
+                  </Box>
                 );
               })}
             </List>
@@ -166,39 +214,3 @@ const Sidebar = ({
 };
 
 export default Sidebar;
-
-{
-  /* <Box position="absolute" bottom="2rem">
-<Divider />
-<FlexBetween textTransform="none" gap="1rem" m="1.5rem 2rem 0 3rem">
-  <Box
-    component="img"
-    alt="profile"
-    src={profileImage}
-    height="40px"
-    width="40px"
-    borderRadius="50px"
-    sx={{ objectFit: "cover" }}
-  />
-  <Box textAlign="left">
-    <Typography
-      fontWeight="bold"
-      fontSize="0.9rem"
-      sx={{ color: theme.palette.secondary[100] }}
-    >
-      {user.name}
-    </Typography>
-
-    <Typography
-      fontSize="0.8rem"
-      sx={{ color: theme.palette.secondary[200] }}
-    >
-      {user.occupation}
-    </Typography>
-  </Box>
-  <SettingsOutlined
-    sx={{ color: theme.palette.secondary[300], fontSize: "25px" }}
-  />
-</FlexBetween>
-</Box> */
-}
