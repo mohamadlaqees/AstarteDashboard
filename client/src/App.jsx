@@ -5,11 +5,6 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Users from "./pages/Users/Users";
 import Artifacts from "./pages/Artifacts/Artifacts";
 import Layout from "./Layout/Layout";
-import Projects from "./pages/Projects/Projects";
-import Tours from "./pages/Tours/Tours";
-import Payments from "./pages/Payments/Payments";
-import ImpactFunds from "./pages/ImpactFunds/ImpactFunds";
-import Reports from "./pages/Reports/Reports";
 
 const App = () => {
   const { theme } = useMode();
@@ -28,16 +23,7 @@ const App = () => {
         },
         {
           path: "users",
-          children: [
-            {
-              index: true,
-              element: <Users />,
-            },
-            {
-              path: ":userId",
-              element: <User />, 
-            },
-          ],
+          element: <Users />,
         },
 
         {
@@ -47,27 +33,22 @@ const App = () => {
 
         {
           path: "tours",
-          element: <Tours />,
+          element: <Users />,
         },
 
         {
           path: "payments",
-          element: <Payments />,
-        },
-
-        {
-          path: "projects",
-          element: <Projects />,
+          element: <Users />,
         },
 
         {
           path: "funds",
-          element: <ImpactFunds />,
+          element: <Users />,
         },
 
         {
           path: "reports",
-          element: <Reports />,
+          element: <Users />,
         },
       ],
     },
