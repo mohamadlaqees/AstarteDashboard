@@ -29,16 +29,7 @@ const App = () => {
         },
         {
           path: "users",
-          children: [
-            {
-              index: true,
-              element: <Users />,
-            },
-            {
-              path: ":userId",
-              element: <User />, 
-            },
-          ],
+          element: <Users />,
         },
 
         {

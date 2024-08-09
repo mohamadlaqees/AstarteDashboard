@@ -33,7 +33,6 @@ const Artifact = ({
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,
         borderRadius: "0.55rem",
-        marginBottom: "20px",
       }}
     >
       <CardContent>
