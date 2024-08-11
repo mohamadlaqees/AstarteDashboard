@@ -3,8 +3,8 @@ import { useGetAllExperiencesQuery } from "../../store/apiSlice/apiSlice";
 
 const Tours = () => {
   const { data: experiences } = useGetAllExperiencesQuery();
-  console.log(experiences);
-  return experiences ? <div>{experiences}</div> : <div>No data</div>;
+
+  return <div></div>;
 };
 
 export default Tours;
