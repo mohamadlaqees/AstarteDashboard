@@ -98,8 +98,10 @@ const AddTour = () => {
                     label="MilestonName"
                     {...register(`itinerary.${index}.milestoneName`)}
                     sx={{ marginTop: "20px", marginBottom: "20px" }}
-                    error={!!errors?.milestoneName}
-                    helperText={errors?.milestoneName?.message}
+                    error={!!errors?.itinerary?.[index]?.milestoneName}
+                    helperText={
+                      errors?.itinerary?.[index]?.milestoneName?.message
+                    }
                   />
 
                   <TextField
@@ -107,8 +109,10 @@ const AddTour = () => {
                     label="location"
                     {...register(`itinerary.${index}.location`)}
                     sx={{ marginTop: "20px", marginBottom: "20px" }}
-                    error={!!errors?.location}
-                    helperText={errors?.location?.message}
+                    error={!!errors?.itinerary?.[index]?.location}
+                    helperText={
+                      errors?.itinerary?.[index]?.location?.message || ""
+                    }
                   />
                 </Box>
 

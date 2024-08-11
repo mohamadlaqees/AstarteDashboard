@@ -14,6 +14,13 @@ export const addExperiencSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
   description: yup.string().required("Description is required"),
   duration: yup.number().required("Duration is required"),
-  milestoneName: yup.string().required("MilestoneName is required"),
-  location: yup.string().required("Location is required"),
+  itinerary: yup
+    .array()
+    .of(
+      yup.object().shape({
+        milestoneName: yup.string().required("Milestone Name is required"),
+        location: yup.string().required("Location is required"),
+      })
+    )
+    .min(1, "At least one itinerary item is required"),
 });
