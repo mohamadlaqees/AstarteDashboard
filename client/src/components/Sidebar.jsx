@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import {
   ChevronLeft,
-  ChevronRightOutlined,
   HomeOutlined,
   Group,
   AccountBalance,
@@ -77,7 +76,7 @@ const navItems = [
     routes: [{ path: "projects", label: "All projects" }],
   },
   {
-    text: "Imapct funds",
+    text: "Impact funds",
     icon: <Paid />,
     routes: [
       { path: "funds", label: "All Funds" },
@@ -109,15 +108,20 @@ const Sidebar = ({
   useEffect(() => {
     if (pathname == "/") {
       setActive("dashboard");
+    } else if (pathname === "/funds") {
+      setActive("impact funds");
     } else {
-      // setActive(pathname=='/users/new'?pathname.substring(2));
+      const path = pathname.split("/")[1];
+      if (path === "funds") {
+        setActive("impact funds");
+      } else {
+        setActive(path);
+      }
     }
   }, [pathname]);
-
   const handleClick = (text) => {
     setOpen((prevOpen) => ({ ...prevOpen, [text]: !prevOpen[text] }));
   };
-
   return (
     <Box component="nav">
       {isSidebarOpen && (
@@ -237,7 +241,6 @@ const Sidebar = ({
                               sx={{ pl: 13 }}
                               onClick={() => {
                                 navigate(`/${path}`);
-                                setActive(path);
                               }}
                             >
                               <ListItemText primary={label} />

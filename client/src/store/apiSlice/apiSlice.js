@@ -4,12 +4,14 @@ export const apiSlice = createApi({
   reducerPath: "api",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "",
+    baseUrl: " https://hp-backend-741l.onrender.com/api/",
+    mode:'no-cors'
   }),
 
   endpoints: (build) => ({
     getAllExperiences: build.query({
-      query: () => "",
+      query: () => "experiences",
+      
     }),
 
     addExperience: build.query({}),
@@ -21,8 +23,8 @@ export const apiSlice = createApi({
 });
 
 export const {
-  useGetAllExperiences,
-  useAddExperience,
-  useUpdateExperience,
-  useDeleteExperience,
+  useGetAllExperiencesQuery,
+  useAddExperienceQuery,
+  useUpdateExperienceQuery,
+  useDeleteExperienceQuery,
 } = apiSlice;
