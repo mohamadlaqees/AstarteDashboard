@@ -16,6 +16,7 @@ import AddTour from "./pages/Tours/AddTour";
 import AddPayment from "./pages/Payments/AddPayment";
 import AddFund from "./pages/ImpactFunds/AddFund";
 import AddReport from "./pages/Reports/AddReport";
+import Tour from "./pages/Tours/Tour";
 
 const App = () => {
   const { theme } = useMode();
@@ -68,6 +69,10 @@ const App = () => {
             {
               index: true,
               element: <Tours />,
+            },
+            {
+              path: ":tourid",
+              element: <Tour />,
             },
             {
               path: "new",
