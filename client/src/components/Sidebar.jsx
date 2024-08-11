@@ -33,7 +33,6 @@ const navItems = [
   {
     text: "Dashboard",
     icon: <HomeOutlined />,
-    routes: [],
   },
   {
     text: "Managing",
@@ -75,7 +74,7 @@ const navItems = [
   {
     text: "Projects",
     icon: <Work />,
-    routes: [],
+    routes: [{ path: "projects", label: "All projects" }],
   },
   {
     text: "Imapct funds",
@@ -108,7 +107,11 @@ const Sidebar = ({
   const theme = useTheme();
 
   useEffect(() => {
-    setActive(pathname.substring(1));
+    if (pathname == "/") {
+      setActive("dashboard");
+    } else {
+      // setActive(pathname=='/users/new'?pathname.substring(2));
+    }
   }, [pathname]);
 
   const handleClick = (text) => {
@@ -159,55 +162,92 @@ const Sidebar = ({
                   );
                 }
 
-                return (
-                  <Box key={text}>
-                    <ListItem disablePadding>
-                      <ListItemButton
-                        onClick={() => handleClick(text)}
-                        sx={{
-                          backgroundColor:
-                            active === text.toLowerCase()
-                              ? theme.palette.secondary[300]
-                              : "transparent",
-                          color:
-                            active === text.toLowerCase()
-                              ? theme.palette.primary[600]
-                              : theme.palette.secondary[100],
-                        }}
-                      >
-                        <ListItemIcon
+                if (text === "Dashboard") {
+                  return (
+                    <Box key={text}>
+                      <ListItem disablePadding>
+                        <ListItemButton
+                          onClick={() => {
+                            navigate("/");
+                          }}
                           sx={{
-                            ml: "2rem",
+                            backgroundColor:
+                              active == text.toLowerCase()
+                                ? theme.palette.secondary[300]
+                                : "transparent",
+                            color:
+                              active == text.toLowerCase()
+                                ? theme.palette.primary[600]
+                                : theme.palette.secondary[100],
+                          }}
+                        >
+                          <ListItemIcon
+                            sx={{
+                              ml: "2rem",
+                              color:
+                                active === text.toLowerCase()
+                                  ? theme.palette.primary[600]
+                                  : theme.palette.secondary[200],
+                            }}
+                          >
+                            {icon}
+                          </ListItemIcon>
+                          <ListItemText primary={text} />
+                        </ListItemButton>
+                      </ListItem>
+                    </Box>
+                  );
+                } else {
+                  return (
+                    <Box key={text}>
+                      <ListItem disablePadding>
+                        <ListItemButton
+                          onClick={() => handleClick(text)}
+                          sx={{
+                            backgroundColor:
+                              active === text.toLowerCase()
+                                ? theme.palette.secondary[300]
+                                : "transparent",
                             color:
                               active === text.toLowerCase()
                                 ? theme.palette.primary[600]
-                                : theme.palette.secondary[200],
+                                : theme.palette.secondary[100],
                           }}
                         >
-                          {icon}
-                        </ListItemIcon>
-                        <ListItemText primary={text} />
-                        {open[text] ? <ExpandLess /> : <ExpandMore />}
-                      </ListItemButton>
-                    </ListItem>
-                    <Collapse in={open[text]} timeout="auto" unmountOnExit>
-                      <List component="div" disablePadding>
-                        {routes.map(({ path, label }) => (
-                          <ListItemButton
-                            key={path}
-                            sx={{ pl: 13 }}
-                            onClick={() => {
-                              navigate(`/${path}`);
-                              setActive(path);
+                          <ListItemIcon
+                            sx={{
+                              ml: "2rem",
+                              color:
+                                active === text.toLowerCase()
+                                  ? theme.palette.primary[600]
+                                  : theme.palette.secondary[200],
                             }}
                           >
-                            <ListItemText primary={label} />
-                          </ListItemButton>
-                        ))}
-                      </List>
-                    </Collapse>
-                  </Box>
-                );
+                            {icon}
+                          </ListItemIcon>
+                          <ListItemText primary={text} />
+                          {open[text] ? <ExpandLess /> : <ExpandMore />}
+                        </ListItemButton>
+                      </ListItem>
+                      <Collapse in={open[text]} timeout="auto" unmountOnExit>
+                        <List component="div" disablePadding>
+                          {routes.map(({ path, label }) => (
+                            <ListItemButton
+                              key={path}
+                              sx={{ pl: 13 }}
+                              onClick={() => {
+                                navigate(`/${path}`);
+                                setActive(path);
+                              }}
+                            >
+                              <ListItemText primary={label} />
+                            </ListItemButton>
+                          ))}
+                        </List>
+                      </Collapse>
+                    </Box>
+                  );
+                }
               })}
             </List>
           </Box>
