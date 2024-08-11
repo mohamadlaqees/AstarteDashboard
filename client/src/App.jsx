@@ -11,6 +11,11 @@ import Tours from "./pages/Tours/Tours";
 import Payments from "./pages/Payments/Payments";
 import ImpactFunds from "./pages/ImpactFunds/ImpactFunds";
 import Reports from "./pages/Reports/Reports";
+import AddArtificats from "./pages/Artifacts/AddArtificats";
+import AddTour from "./pages/Tours/AddTour";
+import AddPayment from "./pages/Payments/AddPayment";
+import AddFund from "./pages/ImpactFunds/AddFund";
+import AddReport from "./pages/Reports/AddReport";
 
 const App = () => {
   const { theme } = useMode();
@@ -23,10 +28,12 @@ const App = () => {
           index: true,
           element: <Dashboard />,
         },
+
         {
           path: "dashboard",
           element: <Dashboard />,
         },
+
         {
           path: "users",
           children: [
@@ -36,24 +43,51 @@ const App = () => {
             },
             {
               path: ":userId",
-              element: <User />, 
+              element: <User />,
             },
           ],
         },
 
         {
           path: "artifacts",
-          element: <Artifacts />,
+          children: [
+            {
+              index: true,
+              element: <Artifacts />,
+            },
+            {
+              path: "new",
+              element: <AddArtificats />,
+            },
+          ],
         },
 
         {
           path: "tours",
-          element: <Tours />,
+          children: [
+            {
+              index: true,
+              element: <Tours />,
+            },
+            {
+              path: "new",
+              element: <AddTour />,
+            },
+          ],
         },
 
         {
           path: "payments",
-          element: <Payments />,
+          children: [
+            {
+              index: true,
+              element: <Payments />,
+            },
+            {
+              path: "new",
+              element: <AddPayment />,
+            },
+          ],
         },
 
         {
@@ -63,12 +97,30 @@ const App = () => {
 
         {
           path: "funds",
-          element: <ImpactFunds />,
+          children: [
+            {
+              index: true,
+              element: <ImpactFunds />,
+            },
+            {
+              path: "new",
+              element: <AddFund />,
+            },
+          ],
         },
 
         {
           path: "reports",
-          element: <Reports />,
+          children: [
+            {
+              index: true,
+              element: <Reports />,
+            },
+            {
+              path: "new",
+              element: <AddReport />,
+            },
+          ],
         },
       ],
     },
