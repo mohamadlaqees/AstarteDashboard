@@ -48,7 +48,7 @@ const Addproject = () => {
         >
           <Stack
             marginTop="20px"
-            width="50%"
+            width="30%"
             marginLeft="auto"
             marginRight="auto"
           >
