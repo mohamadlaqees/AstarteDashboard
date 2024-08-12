@@ -32,6 +32,6 @@ export const addExperienceSchema = yup.object().shape({
 export const addProjectSchema = yup.object().shape({
   name: yup.string().required("Title is required"),
   description: yup.string().required("Description is required"),
-  location: yup.number().required("Location is required"),
+  location: yup.string().required("Location is required"),
   startingPoint: yup.string().required("StartingPoint is required"),
 });
