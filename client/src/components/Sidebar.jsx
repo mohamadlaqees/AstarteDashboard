@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import {
   Box,
   Drawer,
@@ -10,10 +9,10 @@ import {
   ListItemText,
   Typography,
   useTheme,
+  Collapse,
 } from "@mui/material";
 import {
   ChevronLeft,
-  ChevronRightOutlined,
   HomeOutlined,
   Group,
   AccountBalance,
@@ -21,6 +20,8 @@ import {
   Payment,
   Paid,
   Summarize,
+  ExpandLess,
+  ExpandMore,
   Work,
 } from "@mui/icons-material";
 import { useEffect, useState } from "react";
@@ -35,36 +36,66 @@ const navItems = [
   {
     text: "Managing",
     icon: null,
+    routes: [],
   },
   {
     text: "Users",
     icon: <Group />,
+    routes: [
+      { path: "users", label: "All Users" },
+      { path: "users/new", label: "New User" },
+    ],
   },
   {
     text: "Artifacts",
     icon: <AccountBalance />,
+    routes: [
+      { path: "artifacts", label: "All Artifacts" },
+      { path: "artifacts/new", label: "New Artifact" },
+    ],
   },
   {
     text: "Tours",
     icon: <TravelExplore />,
+    routes: [
+      { path: "tours", label: "All Tours" },
+      { path: "tours/new", label: "New Tour" },
+    ],
   },
   {
     text: "Payments",
     icon: <Payment />,
+    routes: [
+      { path: "payments", label: "All Payments" },
+      { path: "payments/new", label: "New Payment" },
+    ],
   },
   {
     text: "Projects",
     icon: <Work />,
+    routes: [
+      { path: "projects", label: "All projects" },
+      { path: "projects/new", label: "New project" },
+    ],
   },
   {
-    text: "Imapct funds",
+    text: "Impact funds",
     icon: <Paid />,
+    routes: [
+      { path: "funds", label: "All Funds" },
+      { path: "funds/new", label: "New Fund" },
+    ],
   },
   {
     text: "Reports",
     icon: <Summarize />,
+    routes: [
+      { path: "reports", label: "All Reports" },
+      { path: "reports/new", label: "New Report" },
+    ],
   },
 ];
+
 const Sidebar = ({
   drawerWidth,
   isSidebarOpen,
@@ -73,12 +104,27 @@ const Sidebar = ({
 }) => {
   const { pathname } = useLocation();
   const [active, setActive] = useState("");
+  const [open, setOpen] = useState({});
   const navigate = useNavigate();
   const theme = useTheme();
 
   useEffect(() => {
-    setActive(pathname.substring(1));
+    if (pathname == "/") {
+      setActive("dashboard");
+    } else if (pathname === "/funds") {
+      setActive("impact funds");
+    } else {
+      const path = pathname.split("/")[1];
+      if (path === "funds") {
+        setActive("impact funds");
+      } else {
+        setActive(path);
+      }
+    }
   }, [pathname]);
+  const handleClick = (text) => {
+    setOpen((prevOpen) => ({ ...prevOpen, [text]: !prevOpen[text] }));
+  };
   return (
     <Box component="nav">
       {isSidebarOpen && (
@@ -114,7 +160,7 @@ const Sidebar = ({
               </FlexBetween>
             </Box>
             <List>
-              {navItems.map(({ text, icon }) => {
+              {navItems.map(({ text, icon, routes }) => {
                 if (!icon) {
                   return (
                     <Typography key={text} sx={{ m: "30px 0 5px 20px " }}>
@@ -122,45 +168,92 @@ const Sidebar = ({
                     </Typography>
                   );
                 }
-                const lcText =
-                  text == "Imapct funds" ? "funds" : text.toLowerCase();
 
-                return (
-                  <ListItem key={text} disablePadding>
-                    <ListItemButton
-                      onClick={() => {
-                        navigate(`/${lcText}`);
-                        setActive(lcText);
-                      }}
-                      sx={{
-                        backgroundColor:
-                          active === lcText
-                            ? theme.palette.secondary[300]
-                            : "transparent",
-                        color:
-                          active === lcText
-                            ? theme.palette.primary[600]
-                            : theme.palette.secondary[100],
-                      }}
-                    >
-                      <ListItemIcon
-                        sx={{
-                          ml: "2rem",
-                          color:
-                            active === lcText
-                              ? theme.palette.primary[600]
-                              : theme.palette.secondary[200],
-                        }}
-                      >
-                        {icon}
-                      </ListItemIcon>
-                      <ListItemText primary={text} />
-                      {active === lcText && (
-                        <ChevronRightOutlined sx={{ ml: "auto " }} />
-                      )}
-                    </ListItemButton>
-                  </ListItem>
-                );
+                if (text === "Dashboard") {
+                  return (
+                    <Box key={text}>
+                      <ListItem disablePadding>
+                        <ListItemButton
+                          onClick={() => {
+                            navigate("/");
+                          }}
+                          sx={{
+                            backgroundColor:
+                              active == text.toLowerCase()
+                                ? theme.palette.secondary[300]
+                                : "transparent",
+                            color:
+                              active == text.toLowerCase()
+                                ? theme.palette.primary[600]
+                                : theme.palette.secondary[100],
+                          }}
+                        >
+                          <ListItemIcon
+                            sx={{
+                              ml: "2rem",
+                              color:
+                                active === text.toLowerCase()
+                                  ? theme.palette.primary[600]
+                                  : theme.palette.secondary[200],
+                            }}
+                          >
+                            {icon}
+                          </ListItemIcon>
+                          <ListItemText primary={text} />
+                        </ListItemButton>
+                      </ListItem>
+                    </Box>
+                  );
+                } else {
+                  return (
+                    <Box key={text}>
+                      <ListItem disablePadding>
+                        <ListItemButton
+                          onClick={() => handleClick(text)}
+                          sx={{
+                            backgroundColor:
+                              active === text.toLowerCase()
+                                ? theme.palette.secondary[300]
+                                : "transparent",
+                            color:
+                              active === text.toLowerCase()
+                                ? theme.palette.primary[600]
+                                : theme.palette.secondary[100],
+                          }}
+                        >
+                          <ListItemIcon
+                            sx={{
+                              ml: "2rem",
+                              color:
+                                active === text.toLowerCase()
+                                  ? theme.palette.primary[600]
+                                  : theme.palette.secondary[200],
+                            }}
+                          >
+                            {icon}
+                          </ListItemIcon>
+                          <ListItemText primary={text} />
+                          {open[text] ? <ExpandLess /> : <ExpandMore />}
+                        </ListItemButton>
+                      </ListItem>
+                      <Collapse in={open[text]} timeout="auto" unmountOnExit>
+                        <List component="div" disablePadding>
+                          {routes.map(({ path, label }) => (
+                            <ListItemButton
+                              key={path}
+                              sx={{ pl: 13 }}
+                              onClick={() => {
+                                navigate(`/${path}`);
+                              }}
+                            >
+                              <ListItemText primary={label} />
+                            </ListItemButton>
+                          ))}
+                        </List>
+                      </Collapse>
+                    </Box>
+                  );
+                }
               })}
             </List>
           </Box>

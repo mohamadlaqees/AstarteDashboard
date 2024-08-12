@@ -1,11 +1,20 @@
-import { Box, useTheme } from "@mui/material";
+import { Box, useTheme, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Header from "../../components/Header";
 import { dataUser } from "./dataUser";
 
 const Users = () => {
   const theme = useTheme();
-  // const { data, isLoading } = useGetCustomersQuery();
+
+  const handleEdit = (id) => {
+    console.log(`Edit user with ID: ${id}`);
+  };
+
+  const handleDelete = (id) => {
+    console.log(`Delete user with ID: ${id}`);
+  };
 
   const columns = [
     {
@@ -46,10 +55,35 @@ const Users = () => {
       headerName: "Role",
       flex: 0.5,
     },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 0.5,
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <Box>
+            <IconButton
+              onClick={() => handleEdit(params.row._id)}
+              color="secondary"
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => handleDelete(params.row._id)}
+              color="secondary"
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        );
+      },
+    },
   ];
+
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="CUSTOMERS" subtitle="List of Customers" />
+      <Header title="Users" subtitle="List of Platform Users" />
       <Box
         mt="40px"
         height="75vh"
