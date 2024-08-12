@@ -5,12 +5,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Header from "../../components/Header";
 import { dataProject } from "./dataProject";
+import { useNavigate } from "react-router-dom";
 
 const Projects = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const handleEdit = (id) => {
-    console.log(`Edit user with ID: ${id}`);
+    navigate(`${id}`);
   };
 
   const handleDelete = (id) => {
