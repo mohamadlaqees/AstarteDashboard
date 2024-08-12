@@ -1,10 +1,161 @@
 import React from "react";
 import { useGetAllExperiencesQuery } from "../../store/apiSlice/apiSlice";
+import { Box, Collapse, IconButton, Typography, useTheme } from "@mui/material";
+import Header from "../../components/Header";
+import { DataGrid } from "@mui/x-data-grid";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import { dataExperience } from "./dataExperience";
 
 const Tours = () => {
+  const theme = useTheme();
+
   const { data: experiences } = useGetAllExperiencesQuery();
 
-  return <div></div>;
+  const handleEdit = (id) => {
+    console.log(`Edit user with ID: ${id}`);
+  };
+
+  const handleDelete = (id) => {
+    console.log(`Delete user with ID: ${id}`);
+  };
+
+  const ItineraryCell = ({ itinerary }) => {
+    const [open, setOpen] = React.useState(false);
+
+    return (
+      <Box>
+        <IconButton
+          size="small"
+          onClick={() => setOpen(!open)}
+          aria-expanded={open}
+        >
+          {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </IconButton>
+        <Collapse in={open}>
+          {itinerary.map((item, index) => (
+            <Box key={index} marginY={1}>
+              <Typography variant="body2">
+                Milestone: {item.milestoneName}
+              </Typography>
+              <Typography variant="body2">Location: {item.location}</Typography>
+            </Box>
+          ))}
+        </Collapse>
+      </Box>
+    );
+  };
+
+  const columns = [
+    {
+      field: "_id",
+      headerName: "ID",
+      flex: 1,
+    },
+    {
+      field: "title",
+      headerName: "Title",
+      flex: 0.5,
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      flex: 1,
+    },
+    {
+      field: "duration",
+      headerName: "Duration",
+      flex: 1,
+    },
+    {
+      field: "rating",
+      headerName: "Rating",
+      flex: 1,
+    },
+    {
+      field: "itinerary",
+      headerName: "Itinerary",
+      width: 200,
+      renderCell: (params) => <ItineraryCell itinerary={params.value} />,
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 0.5,
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <Box>
+            <IconButton
+              onClick={() => handleEdit(params.row._id)}
+              color="secondary"
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => handleDelete(params.row._id)}
+              color="secondary"
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        );
+      },
+    },
+  ];
+
+  return (
+    <Box m="1.5rem 2.5rem">
+      <Header title="Tours" subtitle="List of Tours" />
+      <Box
+        mt="40px"
+        height="75vh"
+        sx={{
+          "& .MuiDataGrid-root": {
+            border: "none",
+          },
+          "& .MuiDataGrid-cell": {
+            borderBottom: "none",
+            height: "auto",
+            minHeight: "50px",
+          },
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: theme.palette.background.alt,
+            color: theme.palette.secondary[100],
+            borderBottom: "none",
+          },
+          "& .MuiDataGrid-virtualScroller": {
+            backgroundColor: theme.palette.primary.light,
+          },
+          "& .MuiDataGrid-footerContainer": {
+            backgroundColor: theme.palette.background.alt,
+            color: theme.palette.secondary[100],
+            borderTop: "none",
+          },
+          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+            color: `${theme.palette.secondary[200]} !important`,
+          },
+        }}
+      >
+        <DataGrid
+          // loading={isLoading || !data}
+          getRowId={(row) => row._id}
+          rows={dataExperience || []}
+          columns={columns}
+          getRowHeight={() => "auto"}
+          sx={{
+            "& .MuiDataGrid-cell": {
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "start",
+            },
+          }}
+        />
+      </Box>
+    </Box>
+  );
 };
 
 export default Tours;
