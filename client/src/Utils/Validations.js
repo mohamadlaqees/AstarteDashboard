@@ -14,6 +14,10 @@ export const addExperiencSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
   description: yup.string().required("Description is required"),
   duration: yup.number().required("Duration is required"),
+  rating: yup
+    .number()
+    .required("Rating is required ")
+    .min(1, "Rating must be at least 1"),
   itinerary: yup
     .array()
     .of(
