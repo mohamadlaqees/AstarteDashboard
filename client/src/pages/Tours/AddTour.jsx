@@ -11,7 +11,7 @@ import {
   useTheme,
 } from "@mui/material";
 import Header from "../../components/Header";
-import { addExperiencSchema } from "../../Utils/Validations";
+import { addExperienceSchema } from "../../Utils/Validations";
 
 const AddTour = () => {
   const theme = useTheme();
@@ -28,7 +28,7 @@ const AddTour = () => {
       rating: null,
       itinerary: [{ milestoneName: "", location: "" }],
     },
-    resolver: yupResolver(addExperiencSchema),
+    resolver: yupResolver(addExperienceSchema),
     mode: "onBlur",
   });
 
@@ -50,7 +50,7 @@ const AddTour = () => {
 
   return (
     <>
-      <Box margin="40px" width="120px">
+      <Box margin="40px">
         <Header title="Tours" subtitle="Add a new tour" />
       </Box>
 
@@ -70,6 +70,7 @@ const AddTour = () => {
                 <TextField
                   {...field}
                   label="Title"
+                  autoFocus
                   sx={{
                     marginBottom: "20px",
                     "& .MuiOutlinedInput-root": {
