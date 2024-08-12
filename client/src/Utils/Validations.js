@@ -10,7 +10,7 @@ export const userProfileSchema = yup.object().shape({
     .required("Email is required"),
 });
 
-export const addExperiencSchema = yup.object().shape({
+export const addExperienceSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
   description: yup.string().required("Description is required"),
   duration: yup.number().required("Duration is required"),
@@ -27,4 +27,11 @@ export const addExperiencSchema = yup.object().shape({
       })
     )
     .min(1, "At least one itinerary item is required"),
+});
+
+export const addProjectSchema = yup.object().shape({
+  name: yup.string().required("Title is required"),
+  description: yup.string().required("Description is required"),
+  location: yup.number().required("Location is required"),
+  startingPoint: yup.string().required("StartingPoint is required"),
 });
