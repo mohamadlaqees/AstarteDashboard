@@ -17,6 +17,8 @@ import AddPayment from "./pages/Payments/AddPayment";
 import AddFund from "./pages/ImpactFunds/AddFund";
 import AddReport from "./pages/Reports/AddReport";
 import Tour from "./pages/Tours/Tour";
+import Addproject from "./pages/Projects/Addproject";
+import Project from "./pages/Projects/Project";
 
 const App = () => {
   const { theme } = useMode();
@@ -97,7 +99,20 @@ const App = () => {
 
         {
           path: "projects",
-          element: <Projects />,
+          children: [
+            {
+              index: true,
+              element: <Projects />,
+            },
+            {
+              path: ":projectid",
+              element: <Project />,
+            },
+            {
+              path: "new",
+              element: <Addproject />,
+            },
+          ],
         },
 
         {

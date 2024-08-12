@@ -73,7 +73,10 @@ const navItems = [
   {
     text: "Projects",
     icon: <Work />,
-    routes: [{ path: "projects", label: "All projects" }],
+    routes: [
+      { path: "projects", label: "All projects" },
+      { path: "projects/new", label: "New project" },
+    ],
   },
   {
     text: "Impact funds",
