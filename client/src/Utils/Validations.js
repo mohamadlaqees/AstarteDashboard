@@ -29,7 +29,8 @@ export const addExperienceSchema = yup.object().shape({
     .min(1, "At least one itinerary item is required"),
 });
 
-export const addProjectSchema = yup.object().shape({
+//Projects
+export const addOrUpdateProjectSchema = yup.object().shape({
   name: yup.string().required("Title is required"),
   description: yup.string().required("Description is required"),
   location: yup.string().required("Location is required"),

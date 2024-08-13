@@ -9,6 +9,7 @@ export const apiSlice = createApi({
   }),
 
   endpoints: (build) => ({
+    //experiences
     getAllExperiences: build.query({
       query: () => "experiences",
     }),

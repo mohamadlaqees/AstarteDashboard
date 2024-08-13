@@ -2,7 +2,7 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Stack, TextField, useTheme } from "@mui/material";
-import { addProjectSchema } from "../../Utils/Validations";
+import { addOrUpdateProjectSchema } from "../../Utils/Validations";
 import Header from "../../components/Header";
 
 const Addproject = () => {
@@ -19,7 +19,7 @@ const Addproject = () => {
       location: "",
       startingPoint: "",
     },
-    resolver: yupResolver(addProjectSchema),
+    resolver: yupResolver(addOrUpdateProjectSchema),
     mode: "onBlur",
   });
 

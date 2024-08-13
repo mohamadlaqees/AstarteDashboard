@@ -2,7 +2,7 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Stack, TextField, useTheme } from "@mui/material";
-import { addProjectSchema } from "../../Utils/Validations";
+import { addOrUpdateProjectSchema } from "../../Utils/Validations";
 import Header from "../../components/Header";
 import { useParams } from "react-router-dom";
 
@@ -13,38 +13,28 @@ const Project = () => {
     control,
     handleSubmit,
     formState: { errors, isDirty, isValid, isSubmitting },
-    reset,
   } = useForm({
-    defaultValues: async () => {
-      const response = await fetch(
-        "F:\filesReact-projectsUniversity projectsAstarte DashboardclientsrcpagesProjectsdataProject.js"
-      );
-      const data = await response.json();
-      return {
-        name: data.name,
-        description: data.description,
-        location: data.location,
-        startingPoint: data.startingPoint,
-      };
-    },
-    resolver: yupResolver(addProjectSchema),
-    mode: "onBlur",
-  });
-
-  const submitHandler = (data) => {
-    reset({
+    defaultValues: {
       name: "",
       description: "",
       location: "",
       startingPoint: "",
-    });
+    },
+    resolver: yupResolver(addOrUpdateProjectSchema),
+    mode: "onBlur",
+  });
+
+  const submitHandler = (data) => {
     console.log(data);
   };
 
   return (
     <>
       <Box margin="40px">
-        <Header title={`Project ${projectid}`} subtitle="Update project info" />
+        <Header
+          title={`Project : ${projectid}`}
+          subtitle="Update project info"
+        />
       </Box>
 
       <form noValidate onSubmit={handleSubmit(submitHandler)}>
@@ -67,7 +57,6 @@ const Project = () => {
                 <TextField
                   {...field}
                   label="Name"
-                  // fullWidth
                   autoFocus
                   sx={{
                     marginBottom: "20px",
