@@ -117,6 +117,9 @@ const Tours = () => {
             border: "none",
           },
           "& .MuiDataGrid-cell": {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "start",
             borderBottom: "none",
             height: "auto",
             minHeight: "50px",
@@ -145,13 +148,6 @@ const Tours = () => {
           rows={dataExperience || []}
           columns={columns}
           getRowHeight={() => "auto"}
-          sx={{
-            "& .MuiDataGrid-cell": {
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "start",
-            },
-          }}
         />
       </Box>
     </Box>
