@@ -19,6 +19,7 @@ import AddReport from "./pages/Reports/AddReport";
 import Tour from "./pages/Tours/Tour";
 import Addproject from "./pages/Projects/Addproject";
 import Project from "./pages/Projects/Project";
+import Fund from "./pages/ImpactFunds/Fund";
 
 const App = () => {
   const { theme } = useMode();
@@ -121,6 +122,10 @@ const App = () => {
             {
               index: true,
               element: <ImpactFunds />,
+            },
+            {
+              path: ":fundid",
+              element: <Fund />,
             },
             {
               path: "new",
