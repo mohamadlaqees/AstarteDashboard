@@ -30,6 +30,17 @@ export const apiSlice = createApi({
     addProject: build.query({}),
     updateProject: build.query({}),
     deleteProject: build.query({}),
+
+    // impact funds
+    getAllImpactFunds: build.query({
+      query: () => "impact-funds",
+    }),
+    getFund: build.query({
+      query: (id) => `impact-funds/${id}`,
+    }),
+    addFund: build.query({}),
+    updateFund: build.query({}),
+    deleteFund: build.query({}),
   }),
 });
 
@@ -44,4 +55,9 @@ export const {
   useAddProjectQuery,
   useUpdateProjectQuery,
   useDeleteProjectQuery,
+  useGetAllImpactFundsQuery,
+  useGetFundQuery,
+  useAddFundQuery,
+  useUpdateFundQuery,
+  useDeleteFundQuery,
 } = apiSlice;
