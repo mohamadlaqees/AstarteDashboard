@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Stack, TextField, useTheme } from "@mui/material";
-import { addFund } from "../../Utils/Validations";
+import { addFundSchema } from "../../Utils/Validations";
 import Header from "../../components/Header";
 
 const AddFund = () => {
@@ -30,7 +30,7 @@ const AddFund = () => {
         },
       ],
     },
-    resolver: yupResolver(addFund),
+    resolver: yupResolver(addFundSchema),
     mode: "onBlur",
   });
 
