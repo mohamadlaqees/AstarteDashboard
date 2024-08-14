@@ -1,9 +1,22 @@
 import React, { Fragment } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button, Stack, TextField, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { addFundSchema } from "../../Utils/Validations";
 import Header from "../../components/Header";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
 const AddFund = () => {
   const theme = useTheme();
@@ -42,7 +55,7 @@ const AddFund = () => {
   const submitHandler = (data) => {
     reset({
       project: {
-        name: "s",
+        name: "",
         description: "",
         location: "",
         startingPoint: "",
@@ -67,18 +80,17 @@ const AddFund = () => {
       </Box>
 
       <form noValidate onSubmit={handleSubmit(submitHandler)}>
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          width="100%"
-        >
+        <Box display="flex" justifyContent="space-between" width="100%">
           <Stack
             marginTop="20px"
             width="30%"
             marginLeft="auto"
             marginRight="auto"
+            overflow="auto"
           >
+            <Box paddingBottom="20px">
+              <Header subtitle="Project info" />
+            </Box>
             <Controller
               name="project.name"
               control={control}
@@ -98,11 +110,6 @@ const AddFund = () => {
                       },
                       "&.Mui-focused fieldset": {
                         borderColor: "secondary.main",
-                      },
-                    },
-                    "& .MuiInputLabel-root": {
-                      "&.Mui-focused": {
-                        color: "secondary.main",
                       },
                     },
                   }}
@@ -132,11 +139,6 @@ const AddFund = () => {
                         borderColor: "secondary.main",
                       },
                     },
-                    "& .MuiInputLabel-root": {
-                      "&.Mui-focused": {
-                        color: "secondary.main",
-                      },
-                    },
                   }}
                   error={!!errors?.project?.description || undefined}
                   helperText={errors?.project?.description?.message}
@@ -162,11 +164,6 @@ const AddFund = () => {
                       },
                       "&.Mui-focused fieldset": {
                         borderColor: "secondary.main",
-                      },
-                    },
-                    "& .MuiInputLabel-root": {
-                      "&.Mui-focused": {
-                        color: "secondary.main",
                       },
                     },
                   }}
@@ -196,11 +193,6 @@ const AddFund = () => {
                         borderColor: "secondary.main",
                       },
                     },
-                    "& .MuiInputLabel-root": {
-                      "&.Mui-focused": {
-                        color: "secondary.main",
-                      },
-                    },
                   }}
                   error={!!errors?.project?.startingPoint || undefined}
                   helperText={errors?.project?.startingPoint?.message}
@@ -226,11 +218,6 @@ const AddFund = () => {
                       },
                       "&.Mui-focused fieldset": {
                         borderColor: "secondary.main",
-                      },
-                    },
-                    "& .MuiInputLabel-root": {
-                      "&.Mui-focused": {
-                        color: "secondary.main",
                       },
                     },
                   }}
@@ -260,11 +247,6 @@ const AddFund = () => {
                         borderColor: "secondary.main",
                       },
                     },
-                    "& .MuiInputLabel-root": {
-                      "&.Mui-focused": {
-                        color: "secondary.main",
-                      },
-                    },
                   }}
                   error={!!errors.allocatedAmount || undefined}
                   helperText={errors?.allocatedAmount?.message}
@@ -278,7 +260,11 @@ const AddFund = () => {
             width="30%"
             marginLeft="auto"
             marginRight="auto"
+            overflow="auto"
           >
+            <Box paddingBottom="20px">
+              <Header subtitle="Donnors info" />
+            </Box>
             {fields.map((field, index) => (
               <Fragment key={field.id}>
                 <Controller
@@ -303,11 +289,6 @@ const AddFund = () => {
                             borderColor: "secondary.main",
                           },
                         },
-                        "& .MuiInputLabel-root": {
-                          "&.Mui-focused": {
-                            color: "secondary.main",
-                          },
-                        },
                       }}
                       error={!!errors?.donors?.[index]?.donation || undefined}
                       helperText={errors?.donors?.[index]?.donation?.message}
@@ -319,33 +300,40 @@ const AddFund = () => {
                   name={`donors.${index}.type`}
                   control={control}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      type="text"
-                      label="Type"
-                      sx={{
-                        marginTop: "20px",
-                        marginBottom: "20px",
-                        "& .MuiOutlinedInput-root": {
-                          "& fieldset": {
-                            borderColor: theme.palette.primary,
+                    <FormControl
+                      fullWidth
+                      error={!!errors?.donors?.[index]?.type}
+                    >
+                      <InputLabel id={`type-label-${index}`}>Type</InputLabel>
+                      <Select
+                        {...field}
+                        labelId={`type-label-${index}`}
+                        id={`type-select-${index}`}
+                        label="Type"
+                        sx={{
+                          "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                              borderColor: theme.palette.primary.main,
+                            },
+                            "&:hover fieldset": {
+                              borderColor: "secondary.main",
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "secondary.main",
+                            },
                           },
-                          "&:hover fieldset": {
-                            borderColor: "secondary.main",
-                          },
-                          "&.Mui-focused fieldset": {
-                            borderColor: "secondary.main",
-                          },
-                        },
-                        "& .MuiInputLabel-root": {
-                          "&.Mui-focused": {
-                            color: "secondary.main",
-                          },
-                        },
-                      }}
-                      error={!!errors?.donors?.[index]?.type || undefined}
-                      helperText={errors?.donors?.[index]?.type?.message}
-                    />
+                        }}
+                      >
+                        <MenuItem value={"Visitor"}>Visitor</MenuItem>
+                        <MenuItem value={"Option1"}>Option1</MenuItem>
+                        <MenuItem value={"Option2"}>Option2</MenuItem>
+                      </Select>
+                      {errors?.donors?.[index]?.type?.message && (
+                        <Typography color="error">
+                          {errors?.donors?.[index]?.type?.message}
+                        </Typography>
+                      )}
+                    </FormControl>
                   )}
                 />
 
@@ -353,33 +341,38 @@ const AddFund = () => {
                   name={`donors.${index}.date`}
                   control={control}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      type="date"
-                      label="Date"
-                      sx={{
-                        marginTop: "20px",
-                        marginBottom: "20px",
-                        "& .MuiOutlinedInput-root": {
-                          "& fieldset": {
-                            borderColor: theme.palette.primary,
+                    <FormControl
+                      fullWidth
+                      error={!!errors?.donors?.[index]?.date}
+                      sx={{ marginTop: "20px", marginBottom: "20px" }}
+                    >
+                      <DatePicker
+                        {...field}
+                        value={field.value ? dayjs(field.value) : null}
+                        onChange={(date) => {
+                          field.onChange(date);
+                        }}
+                        label="Date"
+                        slotProps={{
+                          textField: {
+                            variant: "outlined",
                           },
-                          "&:hover fieldset": {
-                            borderColor: "secondary.main",
+                        }}
+                        sx={{
+                          "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                              borderColor: theme.palette.primary.main,
+                            },
+                            "&:hover fieldset": {
+                              borderColor: "secondary.main",
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "secondary.main",
+                            },
                           },
-                          "&.Mui-focused fieldset": {
-                            borderColor: "secondary.main",
-                          },
-                        },
-                        "& .MuiInputLabel-root": {
-                          "&.Mui-focused": {
-                            color: "secondary.main",
-                          },
-                        },
-                      }}
-                      error={!!errors?.donors?.[index]?.date || undefined}
-                      helperText={errors?.donors?.[index]?.date?.message}
-                    />
+                        }}
+                      />
+                    </FormControl>
                   )}
                 />
 

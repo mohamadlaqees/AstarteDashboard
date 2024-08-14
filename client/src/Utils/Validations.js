@@ -57,15 +57,6 @@ export const addFundSchema = yup.object().shape({
             }').`
         ),
       type: yup.string().required("Type is required"),
-      date: yup
-        .date()
-        .required("Date is required")
-        .typeError(
-          ({ value }) =>
-            `Date must be a 'date' type, but the final value was: '${value}' (cast from the value '${
-              value || ""
-            }').`
-        ),
     })
   ),
 });

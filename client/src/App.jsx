@@ -20,6 +20,8 @@ import Tour from "./pages/Tours/Tour";
 import Addproject from "./pages/Projects/Addproject";
 import Project from "./pages/Projects/Project";
 import Fund from "./pages/ImpactFunds/Fund";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs/AdapterDayjs";
 
 const App = () => {
   const { theme } = useMode();
@@ -129,7 +131,11 @@ const App = () => {
             },
             {
               path: "new",
-              element: <AddFund />,
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <AddFund />
+                </LocalizationProvider>
+              ),
             },
           ],
         },
