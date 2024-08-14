@@ -42,6 +42,9 @@ const ImpactFunds = () => {
                 <Typography variant="body2">
                   Donation: {item.donation}
                 </Typography>
+                <Typography variant="body2">
+                  Type: {item.type}
+                </Typography>
                 <Typography variant="body2">Date: {item.date}</Typography>
               </Box>
             ) : (
