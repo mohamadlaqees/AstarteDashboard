@@ -13,7 +13,6 @@ const Tours = () => {
   const theme = useTheme();
 
   const { data: experiences } = useGetAllExperiencesQuery();
-  console.log(experiences);
 
   const handleEdit = (id) => {
     console.log(`Edit user with ID: ${id}`);
@@ -51,34 +50,14 @@ const Tours = () => {
 
   const columns = [
     {
-      field: "id",
+      field: "_id",
       headerName: "ID",
-      flex: 1,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      flex: 0.5,
-    },
-    {
-      field: "bookedSeats",
-      headerName: "BookedSeats",
-      flex: 0.5,
-    },
-    {
-      field: "registrationStartDate",
-      headerName: "RegistrationStartDate",
-      flex: 1,
-    },
-    {
-      field: "registrationEndDate",
-      headerName: "registrationEndDate",
       flex: 1,
     },
     {
       field: "title",
       headerName: "Title",
-      flex: 1,
+      flex: 0.5,
     },
     {
       field: "description",
@@ -88,12 +67,12 @@ const Tours = () => {
     {
       field: "duration",
       headerName: "Duration",
-      flex: 0.5,
+      flex: 1,
     },
     {
       field: "rating",
       headerName: "Rating",
-      flex: 0.5,
+      flex: 1,
     },
     {
       field: "itinerary",
@@ -104,19 +83,19 @@ const Tours = () => {
     {
       field: "actions",
       headerName: "Actions",
-      flex: 1,
+      flex: 0.5,
       sortable: false,
       renderCell: (params) => {
         return (
           <Box>
             <IconButton
-              onClick={() => handleEdit(params.row.id)}
+              onClick={() => handleEdit(params.row._id)}
               color="secondary"
             >
               <EditIcon />
             </IconButton>
             <IconButton
-              onClick={() => handleDelete(params.row.id)}
+              onClick={() => handleDelete(params.row._id)}
               color="secondary"
             >
               <DeleteIcon />
@@ -165,7 +144,7 @@ const Tours = () => {
       >
         <DataGrid
           // loading={isLoading || !data}
-          getRowId={(row) => row.id}
+          getRowId={(row) => row._id}
           rows={dataExperience || []}
           columns={columns}
           getRowHeight={() => "auto"}
