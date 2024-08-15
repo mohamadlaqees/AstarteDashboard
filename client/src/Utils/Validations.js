@@ -13,6 +13,11 @@ export const userProfileSchema = yup.object().shape({
 //Experience
 export const addExperienceSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
+  status: yup.string().required("Status is required"),
+  bookedSeats: yup
+    .number()
+    .required("BookedSeats is required ")
+    .min(1, "BookedSeats must be at least 1"),
   description: yup.string().required("Description is required"),
   duration: yup.number().required("Duration is required"),
   rating: yup

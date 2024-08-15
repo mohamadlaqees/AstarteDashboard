@@ -81,7 +81,11 @@ const App = () => {
             },
             {
               path: "new",
-              element: <AddTour />,
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <AddTour />
+                </LocalizationProvider>
+              ),
             },
           ],
         },
