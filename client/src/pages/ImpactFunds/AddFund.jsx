@@ -112,6 +112,11 @@ const AddFund = () => {
                         borderColor: "secondary.main",
                       },
                     },
+                    "& .MuiInputLabel-root": {
+                      "&.Mui-focused": {
+                        color: "secondary.main",
+                      },
+                    },
                   }}
                   error={!!errors?.project?.name || undefined}
                   helperText={errors?.project?.name?.message}
@@ -137,6 +142,11 @@ const AddFund = () => {
                       },
                       "&.Mui-focused fieldset": {
                         borderColor: "secondary.main",
+                      },
+                    },
+                    "& .MuiInputLabel-root": {
+                      "&.Mui-focused": {
+                        color: "secondary.main",
                       },
                     },
                   }}
@@ -166,6 +176,11 @@ const AddFund = () => {
                         borderColor: "secondary.main",
                       },
                     },
+                    "& .MuiInputLabel-root": {
+                      "&.Mui-focused": {
+                        color: "secondary.main",
+                      },
+                    },
                   }}
                   error={!!errors?.project?.location || undefined}
                   helperText={errors?.project?.location?.message}
@@ -191,6 +206,11 @@ const AddFund = () => {
                       },
                       "&.Mui-focused fieldset": {
                         borderColor: "secondary.main",
+                      },
+                    },
+                    "& .MuiInputLabel-root": {
+                      "&.Mui-focused": {
+                        color: "secondary.main",
                       },
                     },
                   }}
@@ -220,6 +240,11 @@ const AddFund = () => {
                         borderColor: "secondary.main",
                       },
                     },
+                    "& .MuiInputLabel-root": {
+                      "&.Mui-focused": {
+                        color: "secondary.main",
+                      },
+                    },
                   }}
                   error={!!errors.totalAmount || undefined}
                   helperText={errors?.totalAmount?.message}
@@ -245,6 +270,11 @@ const AddFund = () => {
                       },
                       "&.Mui-focused fieldset": {
                         borderColor: "secondary.main",
+                      },
+                    },
+                    "& .MuiInputLabel-root": {
+                      "&.Mui-focused": {
+                        color: "secondary.main",
                       },
                     },
                   }}
@@ -289,6 +319,11 @@ const AddFund = () => {
                             borderColor: "secondary.main",
                           },
                         },
+                        "& .MuiInputLabel-root": {
+                          "&.Mui-focused": {
+                            color: "secondary.main",
+                          },
+                        },
                       }}
                       error={!!errors?.donors?.[index]?.donation || undefined}
                       helperText={errors?.donors?.[index]?.donation?.message}
@@ -320,6 +355,11 @@ const AddFund = () => {
                             },
                             "&.Mui-focused fieldset": {
                               borderColor: "secondary.main",
+                            },
+                          },
+                          "& .MuiInputLabel-root": {
+                            "&.Mui-focused": {
+                              color: "secondary.main",
                             },
                           },
                         }}
@@ -368,6 +408,11 @@ const AddFund = () => {
                             },
                             "&.Mui-focused fieldset": {
                               borderColor: "secondary.main",
+                            },
+                          },
+                          "& .MuiInputLabel-root": {
+                            "&.Mui-focused": {
+                              color: "secondary.main",
                             },
                           },
                         }}
