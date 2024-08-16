@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Box, useTheme, IconButton, Collapse, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import FolderIcon from "@mui/icons-material/Folder";
+import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import FolderIcon from "@mui/icons-material/Folder";
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
 import { dataFunds } from "./dataFunds";
@@ -12,6 +13,10 @@ import { dataFunds } from "./dataFunds";
 const ImpactFunds = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+
+  const handleInfo = (id) => {
+    navigate(`fundInfo/${id}`);
+  };
 
   const handleEdit = (id) => {
     navigate(`${id}`);
@@ -42,9 +47,7 @@ const ImpactFunds = () => {
                 <Typography variant="body2">
                   Donation: {item.donation}
                 </Typography>
-                <Typography variant="body2">
-                  Type: {item.type}
-                </Typography>
+                <Typography variant="body2">Type: {item.type}</Typography>
                 <Typography variant="body2">Date: {item.date}</Typography>
               </Box>
             ) : (
@@ -71,12 +74,12 @@ const ImpactFunds = () => {
     {
       field: "totalAmount",
       headerName: "TotalAmount",
-      flex: 1,
+      flex: 0.5,
     },
     {
       field: "allocatedAmount",
       headerName: "AllocatedAmount",
-      flex: 1,
+      flex: 0.5,
     },
     {
       field: "donors",
@@ -87,17 +90,23 @@ const ImpactFunds = () => {
     {
       field: "actions",
       headerName: "Actions",
-      flex: 0.5,
+      flex: 1,
       sortable: false,
       renderCell: (params) => {
         return (
           <Box>
             <IconButton
               title="show details"
-              onClick={() => handleEdit(params.row.id)}
+              onClick={() => handleInfo(params.row.id)}
               color="secondary"
             >
               <FolderIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => handleEdit(params.row.id)}
+              color="secondary"
+            >
+              <EditIcon />
             </IconButton>
             <IconButton
               onClick={() => handleDelete(params.row.id)}
