@@ -19,9 +19,10 @@ import AddReport from "./pages/Reports/AddReport";
 import Tour from "./pages/Tours/Tour";
 import Addproject from "./pages/Projects/Addproject";
 import Project from "./pages/Projects/Project";
-import Fund from "./pages/ImpactFunds/Fund";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs/AdapterDayjs";
+import FundInfo from "./pages/ImpactFunds/FundInfo";
+import Fund from "./pages/ImpactFunds/Fund";
 
 const App = () => {
   const { theme } = useMode();
@@ -138,8 +139,16 @@ const App = () => {
               element: <ImpactFunds />,
             },
             {
+              path: "fundInfo/:fundid",
+              element: <FundInfo />,
+            },
+            {
               path: ":fundid",
-              element: <Fund />,
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Fund />
+                </LocalizationProvider>
+              ),
             },
             {
               path: "new",
