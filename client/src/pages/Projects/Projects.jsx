@@ -31,6 +31,11 @@ const Projects = () => {
       flex: 1,
     },
     {
+      field: "isEducational",
+      headerName: "IsEducational",
+      flex: 0.5,
+    },
+    {
       field: "description",
       headerName: "Description",
       flex: 1,
@@ -43,6 +48,16 @@ const Projects = () => {
     {
       field: "startingPoint",
       headerName: "StartingPoint",
+      flex: 1,
+    },
+    {
+      field: "createdAt",
+      headerName: "CreatedAt",
+      flex: 1,
+    },
+    {
+      field: "updatedAt",
+      headerName: "UpdatedAt",
       flex: 1,
     },
     {
