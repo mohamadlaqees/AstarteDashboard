@@ -18,6 +18,7 @@ import Header from "../../components/Header";
 import { addExperienceSchema } from "../../Utils/Validations";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import NumberInputComponent from "../../components/NumberInputComponent";
 
 const AddTour = () => {
   const theme = useTheme();
@@ -30,7 +31,7 @@ const AddTour = () => {
     defaultValues: {
       title: "",
       status: "",
-      bookedSeats: null,
+      bookedSeats: "",
       registrationStartDate: "",
       registrationEndDate: "",
       description: "",
@@ -51,7 +52,7 @@ const AddTour = () => {
     reset({
       title: "",
       status: "",
-      bookedSeats: null,
+      bookedSeats: "",
       registrationStartDate: null,
       registrationEndDate: null,
       description: "",
@@ -175,7 +176,20 @@ const AddTour = () => {
               )}
             />
 
-            <Box display="flex" gap="20px" marginBottom="20px">
+            <Controller
+              name="bookedSeats"
+              control={control}
+              render={({ field }) => (
+                <NumberInputComponent
+                  field={field}
+                  label={"BookedSeats"}
+                  error={!!errors?.bookedSeats}
+                  errorMessage={errors?.bookedSeats?.message}
+                />
+              )}
+            />
+
+            <Box display="flex" gap="20px" sx={{ marginTop: "20px" }}>
               <Typography marginTop="10px">Rating</Typography>
               <Controller
                 name="rating"
@@ -189,7 +203,6 @@ const AddTour = () => {
                       }}
                       sx={{ marginTop: "10px" }}
                       error={!!errors.rating || undefined}
-                      helperText={errors?.rating?.message}
                     />
                     {errors.rating && (
                       <Typography color="error" sx={{ marginBottom: "20px" }}>
@@ -210,6 +223,7 @@ const AddTour = () => {
                       {...field}
                       label="Status"
                       sx={{
+                        marginBottom: "40px",
                         "& .MuiOutlinedInput-root": {
                           "& fieldset": {
                             borderColor: theme.palette.primary.main,
@@ -232,7 +246,17 @@ const AddTour = () => {
                       <MenuItem value={"Unavailable"}>Unavailable</MenuItem>
                     </Select>
                     {errors?.status?.message && (
-                      <Typography color="error">
+                      <Typography
+                        color="error"
+                        sx={{
+                          fontSize: "11px",
+                          position: "absolute",
+                          bottom: "20px",
+                          left: "12px",
+                          marginTop: "15px",
+                        }}
+                      >
+                        {" "}
                         {errors?.status?.message}
                       </Typography>
                     )}
@@ -246,7 +270,10 @@ const AddTour = () => {
                 name="registrationStartDate"
                 control={control}
                 render={({ field }) => (
-                  <FormControl fullWidth>
+                  <FormControl
+                    fullWidth
+                    error={!!errors?.registrationStartDate}
+                  >
                     <DatePicker
                       {...field}
                       value={field.value ? dayjs(field.value) : null}
@@ -282,7 +309,7 @@ const AddTour = () => {
                 name="registrationEndDate"
                 control={control}
                 render={({ field }) => (
-                  <FormControl fullWidth>
+                  <FormControl fullWidth error={!!errors?.registrationEndDate}>
                     <DatePicker
                       {...field}
                       value={field.value ? dayjs(field.value) : null}
