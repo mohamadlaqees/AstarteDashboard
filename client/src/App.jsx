@@ -113,11 +113,19 @@ const App = () => {
             },
             {
               path: ":projectid",
-              element: <Project />,
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Project />
+                </LocalizationProvider>
+              ),
             },
             {
               path: "new",
-              element: <Addproject />,
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Addproject />
+                </LocalizationProvider>
+              ),
             },
           ],
         },
