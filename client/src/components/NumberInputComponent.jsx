@@ -45,7 +45,7 @@ export default function NumberInputComponent({
         aria-label={label}
         placeholder={label}
         error={error}
-        value={field.value ?? ""}
+        value={field.value ?? 0}
         onChange={(event, val) => field.onChange(val)}
       />
       {errorMessage && (

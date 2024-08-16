@@ -346,6 +346,7 @@ const AddFund = () => {
                         id={`type-select-${index}`}
                         label="Type"
                         sx={{
+                          marginBottom: "5px",
                           "& .MuiOutlinedInput-root": {
                             "& fieldset": {
                               borderColor: theme.palette.primary.main,
@@ -369,7 +370,14 @@ const AddFund = () => {
                         <MenuItem value={"Option2"}>Option2</MenuItem>
                       </Select>
                       {errors?.donors?.[index]?.type?.message && (
-                        <Typography color="error">
+                        <Typography
+                          color="error"
+                          sx={{
+                            fontSize: "11px",
+                            marginLeft: "15px",
+                          }}
+                        >
+                          {" "}
                           {errors?.donors?.[index]?.type?.message}
                         </Typography>
                       )}
