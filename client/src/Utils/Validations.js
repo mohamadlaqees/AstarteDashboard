@@ -24,6 +24,8 @@ export const addExperienceSchema = yup.object().shape({
     .number()
     .required("Rating is required ")
     .min(1, "Rating must be at least 1"),
+  registrationStartDate: yup.date().required(),
+  registrationEndDate: yup.date().required(),
   itinerary: yup.array().of(
     yup.object().shape({
       milestoneName: yup.string().required("Milestone Name is required"),
@@ -35,9 +37,11 @@ export const addExperienceSchema = yup.object().shape({
 //Projects
 export const addOrUpdateProjectSchema = yup.object().shape({
   name: yup.string().required("Title is required"),
+  isEducational: yup.string().required("IsEducational is required"),
   description: yup.string().required("Description is required"),
   location: yup.string().required("Location is required"),
   startingPoint: yup.string().required("StartingPoint is required"),
+  date: yup.date().required(),
 });
 
 //Impact funds
@@ -47,6 +51,7 @@ export const addFundSchema = yup.object().shape({
     description: yup.string().required("Description is required"),
     location: yup.string().required("Location is required"),
     startingPoint: yup.string().required("StartingPoint is required"),
+    date: yup.date().required(),
   }),
   totalAmount: yup.number().required("TotalAmount is required"),
   allocatedAmount: yup.number().required("AllocatedAmount is required"),
