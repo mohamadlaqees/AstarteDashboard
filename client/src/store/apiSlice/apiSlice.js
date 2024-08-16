@@ -4,8 +4,7 @@ export const apiSlice = createApi({
   reducerPath: "api",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: " https://hp-backend-741l.onrender.com/api/",
-    mode: "no-cors",
+    baseUrl: "https://hp-backend-741l.onrender.com/api/",
   }),
 
   endpoints: (build) => ({
