@@ -76,7 +76,6 @@ const Addproject = () => {
                 <TextField
                   {...field}
                   label="Name"
-                  // fullWidth
                   autoFocus
                   sx={{
                     marginBottom: "20px",
