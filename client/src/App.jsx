@@ -78,7 +78,11 @@ const App = () => {
             },
             {
               path: ":tourid",
-              element: <Tour />,
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Tour />
+                </LocalizationProvider>
+              ),
             },
             {
               path: "new",
