@@ -8,14 +8,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { dataExperience } from "./dataExperience";
+import { useNavigate } from "react-router-dom";
 
 const Tours = () => {
   const theme = useTheme();
-
-  const { data: experiences } = useGetAllExperiencesQuery();
+  const navigate = useNavigate();
+  const { data: experiences, isLoading } = useGetAllExperiencesQuery();
   console.log(experiences);
 
   const handleEdit = (id) => {
+    navigate(`${id}`);
     console.log(`Edit user with ID: ${id}`);
   };
 
@@ -164,9 +166,9 @@ const Tours = () => {
         }}
       >
         <DataGrid
-          // loading={isLoading || !data}
+          loading={isLoading}
           getRowId={(row) => row.id}
-          rows={dataExperience || []}
+          rows={experiences?.results || []}
           columns={columns}
           getRowHeight={() => "auto"}
         />
