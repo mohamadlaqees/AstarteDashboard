@@ -1,10 +1,12 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
+  Avatar,
   Box,
   Button,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Rating,
@@ -19,6 +21,7 @@ import { addExperienceSchema } from "../../Utils/Validations";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import NumberInputComponent from "../../components/NumberInputComponent";
+import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 
 const AddTour = () => {
   const theme = useTheme();
@@ -31,22 +34,51 @@ const AddTour = () => {
     defaultValues: {
       title: "",
       status: "",
-      bookedSeats: "",
+      bookedSeats: 0,
       registrationStartDate: "",
       registrationEndDate: "",
       description: "",
       duration: "",
-      rating: null,
+      rating: 0,
       itinerary: [{ milestoneName: "", location: "" }],
+      includes: [
+        {
+          description: "",
+          icon: "",
+        },
+      ],
     },
     resolver: yupResolver(addExperienceSchema),
     mode: "onBlur",
   });
+  const [imagePreviews, setImagePreviews] = useState([]);
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "itinerary",
   });
+
+  const {
+    fields: includesFields,
+    append: appendIncludes,
+    remove: removeIncludes,
+  } = useFieldArray({
+    control,
+    name: "includes",
+  });
+
+  const handleImageChange = (e, index) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const newImagePreviews = [...imagePreviews];
+        newImagePreviews[index] = reader.result;
+        setImagePreviews(newImagePreviews);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const submitHandler = (data) => {
     reset({
@@ -59,6 +91,12 @@ const AddTour = () => {
       duration: "",
       rating: 0,
       itinerary: [{ milestoneName: "", location: "" }],
+      includes: [
+        {
+          description: "",
+          icon: "",
+        },
+      ],
     });
     console.log(data);
   };
@@ -180,12 +218,17 @@ const AddTour = () => {
               name="bookedSeats"
               control={control}
               render={({ field }) => (
-                <NumberInputComponent
-                  field={field}
-                  label={"BookedSeats"}
-                  error={!!errors?.bookedSeats}
-                  errorMessage={errors?.bookedSeats?.message}
-                />
+                <Box>
+                  <InputLabel sx={{ marginBottom: "10px" }}>
+                    Booked seats
+                  </InputLabel>
+                  <NumberInputComponent
+                    field={field}
+                    label={"BookedSeats"}
+                    error={!!errors?.bookedSeats}
+                    errorMessage={errors?.bookedSeats?.message}
+                  />
+                </Box>
               )}
             />
 
@@ -201,11 +244,18 @@ const AddTour = () => {
                       onChange={(event, newValue) => {
                         field.onChange(newValue);
                       }}
-                      sx={{ marginTop: "10px" }}
+                      sx={{ marginTop: "10px", marginBottom: "5px" }}
                       error={!!errors.rating || undefined}
                     />
                     {errors.rating && (
-                      <Typography color="error" sx={{ marginBottom: "20px" }}>
+                      <Typography
+                        color="error"
+                        sx={{
+                          fontSize: "11px",
+                          marginLeft: "15px",
+                        }}
+                      >
+                        {" "}
                         {errors.rating.message}
                       </Typography>
                     )}
@@ -223,7 +273,7 @@ const AddTour = () => {
                       {...field}
                       label="Status"
                       sx={{
-                        marginBottom: "40px",
+                        marginBottom: "5px",
                         "& .MuiOutlinedInput-root": {
                           "& fieldset": {
                             borderColor: theme.palette.primary.main,
@@ -250,10 +300,7 @@ const AddTour = () => {
                         color="error"
                         sx={{
                           fontSize: "11px",
-                          position: "absolute",
-                          bottom: "20px",
-                          left: "12px",
-                          marginTop: "15px",
+                          marginLeft: "15px",
                         }}
                       >
                         {" "}
@@ -265,7 +312,7 @@ const AddTour = () => {
               />
             </Box>
 
-            <Box display="flex" gap="20px" marginBottom="20px">
+            <Box display="flex" gap="20px" marginBottom="20px" marginTop="20px">
               <Controller
                 name="registrationStartDate"
                 control={control}
@@ -482,7 +529,107 @@ const AddTour = () => {
             marginRight="auto"
             overflow="auto"
           >
-            Media
+            <Box marginBottom="20px">
+              <Header subtitle="Includes" />
+            </Box>
+
+            {includesFields.map((include, index) => (
+              <Fragment key={include.id}>
+                <Box display="flex" justifyContent="space-between">
+                  <Controller
+                    name={`includes.${index}.description`}
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Description"
+                        type="text"
+                        sx={{
+                          marginBottom: "20px",
+                          marginTop: "25px",
+                          "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                              borderColor: theme.palette.primary,
+                            },
+                            "&:hover fieldset": {
+                              borderColor: "secondary.main",
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "secondary.main",
+                            },
+                          },
+                          "& .MuiInputLabel-root": {
+                            "&.Mui-focused": {
+                              color: "secondary.main",
+                            },
+                          },
+                        }}
+                        error={!!errors.includes?.[index]?.description}
+                        helperText={
+                          errors.includes?.[index]?.description?.message
+                        }
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    control={control}
+                    name={`includes.${index}.icon`}
+                    render={({ field }) => (
+                      <Box>
+                        <InputLabel
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        >
+                          Icon
+                        </InputLabel>
+                        <input
+                          accept="image/*"
+                          style={{ display: "none" }}
+                          id={`icon-upload-${index}`}
+                          type="file"
+                          onChange={(e) => {
+                            field.onChange(e.target.files[0]);
+                            handleImageChange(e, index);
+                          }}
+                        />
+                        <label htmlFor={`icon-upload-${index}`}>
+                          <IconButton component="span">
+                            <Avatar
+                              src={imagePreviews[index] || ""}
+                              sx={{
+                                cursor: "pointer",
+                                width: 56,
+                                height: 56,
+                                border: `3px solid ${theme.palette.secondary.main}`,
+                                backgroundColor: imagePreviews[index]
+                                  ? "transparent"
+                                  : "grey.300",
+                              }}
+                            >
+                              {!imagePreviews[index] && <PhotoLibraryIcon />}
+                            </Avatar>
+                          </IconButton>
+                        </label>
+                        {errors?.includes?.[index]?.message && (
+                          <Typography
+                            color="error"
+                            sx={{
+                              fontSize: "11px",
+                              marginLeft: "15px",
+                            }}
+                          >
+                            {errors?.includes?.[index]?.message}
+                          </Typography>
+                        )}
+                      </Box>
+                    )}
+                  />
+                </Box>
+              </Fragment>
+            ))}
           </Stack>
         </Box>
       </form>
