@@ -1,9 +1,22 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button, Stack, TextField, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { addOrUpdateProjectSchema } from "../../Utils/Validations";
 import Header from "../../components/Header";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
 const Addproject = () => {
   const theme = useTheme();
@@ -15,9 +28,11 @@ const Addproject = () => {
   } = useForm({
     defaultValues: {
       name: "",
+      isEducational: "",
       description: "",
       location: "",
       startingPoint: "",
+      date: "",
     },
     resolver: yupResolver(addOrUpdateProjectSchema),
     mode: "onBlur",
@@ -26,9 +41,11 @@ const Addproject = () => {
   const submitHandler = (data) => {
     reset({
       name: "",
+      isEducational: "",
       description: "",
       location: "",
       startingPoint: "",
+      date: "",
     });
     console.log(data);
   };
@@ -87,6 +104,53 @@ const Addproject = () => {
             />
 
             <Controller
+              name={"isEducational"}
+              control={control}
+              render={({ field }) => (
+                <FormControl fullWidth error={!!errors?.isEducational}>
+                  <InputLabel>IsEducational</InputLabel>
+                  <Select
+                    {...field}
+                    label="IsEducational"
+                    sx={{
+                      marginBottom: "5px",
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: theme.palette.primary.main,
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "secondary.main",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "secondary.main",
+                        },
+                      },
+                      "& .MuiInputLabel-root": {
+                        "&.Mui-focused": {
+                          color: "secondary.main",
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value={"True"}>True</MenuItem>
+                    <MenuItem value={"False"}>False</MenuItem>
+                  </Select>
+                  {errors?.isEducational?.message && (
+                    <Typography
+                      color="error"
+                      sx={{
+                        fontSize: "11px",
+                        marginLeft: "15px",
+                      }}
+                    >
+                      {errors?.isEducational?.message}
+                    </Typography>
+                  )}
+                </FormControl>
+              )}
+            />
+
+            <Controller
               name="description"
               control={control}
               render={({ field }) => (
@@ -95,6 +159,7 @@ const Addproject = () => {
                   label="Description"
                   sx={{
                     marginBottom: "20px",
+                    marginTop: "20px",
                     "& .MuiOutlinedInput-root": {
                       "& fieldset": {
                         borderColor: theme.palette.primary,
@@ -179,6 +244,50 @@ const Addproject = () => {
                   error={!!errors.startingPoint || undefined}
                   helperText={errors?.startingPoint?.message}
                 />
+              )}
+            />
+
+            <Controller
+              name={"date"}
+              control={control}
+              render={({ field }) => (
+                <FormControl
+                  fullWidth
+                  sx={{ marginBottom: "20px" }}
+                  error={!!errors?.date}
+                >
+                  <DatePicker
+                    {...field}
+                    value={field.value ? dayjs(field.value) : null}
+                    onChange={(date) => {
+                      field.onChange(date);
+                    }}
+                    label="Date"
+                    slotProps={{
+                      textField: {
+                        variant: "outlined",
+                      },
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: theme.palette.primary.main,
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "secondary.main",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "secondary.main",
+                        },
+                      },
+                      "& .MuiInputLabel-root": {
+                        "&.Mui-focused": {
+                          color: "secondary.main",
+                        },
+                      },
+                    }}
+                  />
+                </FormControl>
               )}
             />
 
