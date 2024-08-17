@@ -27,11 +27,12 @@ const IconUploader = ({
   };
 
   return (
-    <Box>
+    <Box >
       <InputLabel
         sx={{
-          display: "flex",
-          justifyContent: "center",
+          marginLeft:'auto',
+          marginRight:'auto',
+          marginBottom: "5px",
         }}
       >
         {label}
@@ -56,6 +57,7 @@ const IconUploader = ({
             width: "56px",
             height: "56px",
           }}
+          disabled={disabled}
         >
           <Avatar
             src={src || ""}
