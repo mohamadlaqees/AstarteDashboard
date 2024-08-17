@@ -108,6 +108,7 @@ const AddTour = () => {
       reader.readAsDataURL(file);
     }
   };
+
   const submitHandler = (data) => {
     reset({
       title: "",

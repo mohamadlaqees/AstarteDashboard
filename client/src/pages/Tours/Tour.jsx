@@ -88,6 +88,32 @@ const Tour = () => {
     name: "includes",
   });
 
+  const handleIconChange = (e, index) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const newIconPreviews = [...iconPreviews];
+        newIconPreviews[index] = reader.result;
+        setIconPreviews(newIconPreviews);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageChange = (e, index) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const newImagePreviews = [...imagePreviews];
+        newImagePreviews[index] = reader.result;
+        setImagePreviews(newImagePreviews);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const submitHandler = (data) => {
     console.log(data);
   };
@@ -115,6 +141,10 @@ const Tour = () => {
           image: media,
         })),
       });
+      setIconPreviews(
+        experience?.document?.includes.map((include) => include.icon || "")
+      );
+      setImagePreviews(experience?.document?.media.map((media) => media || ""));
     }
   }, [experience, reset]);
 
