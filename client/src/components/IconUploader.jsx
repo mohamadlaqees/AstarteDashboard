@@ -2,26 +2,25 @@ import React from "react";
 import { Avatar, Box, IconButton, InputLabel } from "@mui/material";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 
-const ImageUploader = ({
+const IconUploader = ({
   label,
   index,
   src,
   sx,
   disabled,
-  radius,
   field,
-  imagePreviews = [],
-  setImagePreviews = () => {},
+  iconPreviews = [],
+  setIconPreviews = () => {},
   errorMessage,
 }) => {
-  const handleImageChange = (e, index) => {
+  const handleIconChange = (e, index) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const newImagePreviews = [...imagePreviews];
-        newImagePreviews[index] = reader.result;
-        setImagePreviews(newImagePreviews);
+        const newIconPreviews = [...iconPreviews];
+        newIconPreviews[index] = reader.result;
+        setIconPreviews(newIconPreviews);
       };
       reader.readAsDataURL(file);
     }
@@ -43,20 +42,19 @@ const ImageUploader = ({
         disabled={disabled}
         style={{ display: "none" }}
         type="file"
-        id={`image-${index}`}
+        id={`icon-${index}`}
         onChange={(e) => {
-          handleImageChange(e, index);
+          handleIconChange(e, index);
           field.onChange(src);
         }}
       />
 
-      <label htmlFor={`image-${index}`}>
+      <label htmlFor={`icon-${index}`}>
         <IconButton
           component="span"
           sx={{
-            width: "180px",
-            height: "180px",
-            borderRadius: `${radius}`,
+            width: "56px",
+            height: "56px",
           }}
         >
           <Avatar
@@ -86,4 +84,4 @@ const ImageUploader = ({
   );
 };
 
-export default ImageUploader;
+export default IconUploader;
