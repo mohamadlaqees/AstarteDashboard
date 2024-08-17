@@ -23,6 +23,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/L
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs/AdapterDayjs";
 import FundInfo from "./pages/ImpactFunds/FundInfo";
 import Fund from "./pages/ImpactFunds/Fund";
+import TourInfo from "./pages/Tours/TourInfo";
 
 const App = () => {
   const { theme } = useMode();
@@ -75,6 +76,14 @@ const App = () => {
             {
               index: true,
               element: <Tours />,
+            },
+            {
+              path: "tourInfo/:tourid",
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <TourInfo />
+                </LocalizationProvider>
+              ),
             },
             {
               path: ":tourid",
