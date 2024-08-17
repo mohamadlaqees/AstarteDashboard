@@ -14,6 +14,7 @@ import { useParams } from "react-router-dom";
 import { useGetExperienceQuery } from "../../store/apiSlice/apiSlice";
 import TableComponent from "../../components/TableComponent";
 import ImageUploader from "../../components/ImageUploader";
+import IconUploader from "../../components/IconUploader";
 
 const TourInfo = () => {
   const theme = useTheme();
@@ -45,7 +46,7 @@ const TourInfo = () => {
       rows.push({
         description: field.description,
         icon: (
-          <ImageUploader
+          <IconUploader
             label={"icon"}
             disabled={true}
             index={index}
@@ -304,10 +305,10 @@ const TourInfo = () => {
                       index={index}
                       src={media}
                       key={index}
+                      radius={"0px"}
                       sx={{
-                        width: "180px",
-                        height: "180px",
-                        borderRadius: "0px",
+                        width: "150px",
+                        height: "150px",
                         border: `3px solid ${theme.palette.secondary.main}`,
                       }}
                     />
