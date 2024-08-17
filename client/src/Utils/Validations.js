@@ -11,7 +11,7 @@ export const userProfileSchema = yup.object().shape({
 });
 
 //Experience
-export const addExperienceSchema = yup.object().shape({
+export const addOrUpdateExperienceSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
   status: yup.string().required("Status is required"),
   bookedSeats: yup
