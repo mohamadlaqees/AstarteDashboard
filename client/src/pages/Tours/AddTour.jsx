@@ -18,7 +18,7 @@ import {
   useTheme,
 } from "@mui/material";
 import Header from "../../components/Header";
-import { addExperienceSchema } from "../../Utils/Validations";
+import { addOrUpdateExperienceSchema } from "../../Utils/Validations";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import NumberInputComponent from "../../components/NumberInputComponent";
@@ -54,7 +54,7 @@ const AddTour = () => {
         },
       ],
     },
-    resolver: yupResolver(addExperienceSchema),
+    resolver: yupResolver(addOrUpdateExperienceSchema),
     mode: "onBlur",
   });
   const [iconPreviews, setIconPreviews] = useState([]);
