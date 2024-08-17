@@ -7,7 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
-export default function TableComponent({ rows, columns, theme }) {
+export default function TableComponent({ rows, columns, theme, Align }) {
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 440 }}>
@@ -20,7 +20,10 @@ export default function TableComponent({ rows, columns, theme }) {
                   align={column.align}
                   style={{
                     minWidth: column.minWidth,
-                    color: `${theme !== undefined ? theme.palette.secondary.main : ""}`,
+                    color: `${
+                      theme !== undefined ? theme.palette.secondary.main : ""
+                    }`,
+                    textAlign: `${Align}`,
                   }}
                 >
                   {column.label}
@@ -35,7 +38,13 @@ export default function TableComponent({ rows, columns, theme }) {
                   {columns.map((column) => {
                     const value = row[column.id];
                     return (
-                      <TableCell key={column.id} align={column.align}>
+                      <TableCell
+                        key={column.id}
+                        align={column.align}
+                        sx={{
+                          textAlign: `${Align}`,
+                        }}
+                      >
                         {column.format && typeof value === "number"
                           ? column.format(value)
                           : value}

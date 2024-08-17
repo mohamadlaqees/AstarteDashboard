@@ -13,8 +13,8 @@ import Header from "../../components/Header";
 import { useParams } from "react-router-dom";
 import { useGetExperienceQuery } from "../../store/apiSlice/apiSlice";
 import TableComponent from "../../components/TableComponent";
-import ImageUploader from "../../components/ImageUploader";
 import IconUploader from "../../components/IconUploader";
+import ImageListComponent from "../../components/ImageListComponent";
 
 const TourInfo = () => {
   const theme = useTheme();
@@ -55,6 +55,7 @@ const TourInfo = () => {
             sx={{
               width: 56,
               height: 56,
+
               border: `3px solid ${theme.palette.secondary.main}`,
             }}
           />
@@ -284,7 +285,12 @@ const TourInfo = () => {
           <Box>
             <Box marginBottom="40px">
               <Header subtitle="Includes" />
-              <TableComponent rows={rows} columns={columns} theme={theme} />
+              <TableComponent
+                rows={rows}
+                columns={columns}
+                theme={theme}
+                Align={"center"}
+              />
             </Box>
           </Box>
 
@@ -295,27 +301,7 @@ const TourInfo = () => {
               <Header subtitle="Media" />
             </Box>
 
-            {response?.media?.map((media, index) => (
-              <Fragment key={index}>
-                <Box display="flex" justifyContent="space-between">
-                  <Box>
-                    <ImageUploader
-                      label={"Image"}
-                      disabled={true}
-                      index={index}
-                      src={media}
-                      key={index}
-                      radius={"0px"}
-                      sx={{
-                        width: "150px",
-                        height: "150px",
-                        border: `3px solid ${theme.palette.secondary.main}`,
-                      }}
-                    />
-                  </Box>
-                </Box>
-              </Fragment>
-            ))}
+            <ImageListComponent media={response?.media} />
           </Box>
         </Stack>
       </Box>
