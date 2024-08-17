@@ -26,7 +26,12 @@ export const addExperienceSchema = yup.object().shape({
       "Duration must be a string or number",
       (value) => typeof value === "string" || typeof value === "number"
     )
-    .required("Duration is required"),
+    .required()
+    .test(
+      "is-not-empty",
+      "Duration is required",
+      (value) => value !== "" && value !== undefined && value !== null
+    ),
   rating: yup
     .number()
     .required("Rating is required ")
@@ -43,6 +48,11 @@ export const addExperienceSchema = yup.object().shape({
     yup.object().shape({
       description: yup.string().required("Description is required"),
       icon: yup.string().required("Icon is required"),
+    })
+  ),
+  media: yup.array().of(
+    yup.object().shape({
+      image: yup.string().required("Image is required"),
     })
   ),
 });

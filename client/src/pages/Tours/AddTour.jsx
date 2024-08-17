@@ -5,6 +5,7 @@ import {
   Avatar,
   Box,
   Button,
+  Divider,
   FormControl,
   IconButton,
   InputLabel,
@@ -47,15 +48,30 @@ const AddTour = () => {
           icon: "",
         },
       ],
+      media: [
+        {
+          image: "",
+        },
+      ],
     },
     resolver: yupResolver(addExperienceSchema),
     mode: "onBlur",
   });
+  const [iconPreviews, setIconPreviews] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "itinerary",
+  });
+
+  const {
+    fields: mediaFields,
+    append: appendMedia,
+    remove: removeMedia,
+  } = useFieldArray({
+    control,
+    name: "media",
   });
 
   const {
@@ -66,6 +82,19 @@ const AddTour = () => {
     control,
     name: "includes",
   });
+
+  const handleIconChange = (e, index) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const newIconPreviews = [...iconPreviews];
+        newIconPreviews[index] = reader.result;
+        setIconPreviews(newIconPreviews);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleImageChange = (e, index) => {
     const file = e.target.files[0];
@@ -79,7 +108,6 @@ const AddTour = () => {
       reader.readAsDataURL(file);
     }
   };
-
   const submitHandler = (data) => {
     reset({
       title: "",
@@ -95,6 +123,11 @@ const AddTour = () => {
         {
           description: "",
           icon: "",
+        },
+      ],
+      media: [
+        {
+          image: "",
         },
       ],
     });
@@ -208,7 +241,7 @@ const AddTour = () => {
                       },
                     },
                   }}
-                  error={!!errors.duration || undefined}
+                  error={!!errors.duration}
                   helperText={errors?.duration?.message}
                 />
               )}
@@ -524,112 +557,279 @@ const AddTour = () => {
 
           <Stack
             marginTop="20px"
-            width="30%"
+            width="40%"
             marginLeft="auto"
             marginRight="auto"
             overflow="auto"
           >
-            <Box marginBottom="20px">
-              <Header subtitle="Includes" />
-            </Box>
+            <Box>
+              <Box marginBottom="20px">
+                <Header subtitle="Includes" />
+              </Box>
 
-            {includesFields.map((include, index) => (
-              <Fragment key={include.id}>
-                <Box display="flex" justifyContent="space-between">
-                  <Controller
-                    name={`includes.${index}.description`}
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Description"
-                        type="text"
-                        sx={{
-                          marginBottom: "20px",
-                          marginTop: "25px",
-                          "& .MuiOutlinedInput-root": {
-                            "& fieldset": {
-                              borderColor: theme.palette.primary,
-                            },
-                            "&:hover fieldset": {
-                              borderColor: "secondary.main",
-                            },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "secondary.main",
-                            },
-                          },
-                          "& .MuiInputLabel-root": {
-                            "&.Mui-focused": {
-                              color: "secondary.main",
-                            },
-                          },
-                        }}
-                        error={!!errors.includes?.[index]?.description}
-                        helperText={
-                          errors.includes?.[index]?.description?.message
-                        }
-                      />
-                    )}
-                  />
-
-                  <Controller
-                    control={control}
-                    name={`includes.${index}.icon`}
-                    render={({ field }) => (
-                      <Box>
-                        <InputLabel
+              {includesFields.map((include, index) => (
+                <Fragment key={include.id}>
+                  <Box display="flex" justifyContent="space-between">
+                    <Controller
+                      name={`includes.${index}.description`}
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Description"
+                          type="text"
                           sx={{
-                            display: "flex",
-                            justifyContent: "center",
+                            marginBottom: "20px",
+                            marginTop: "25px",
+                            "& .MuiOutlinedInput-root": {
+                              "& fieldset": {
+                                borderColor: theme.palette.primary,
+                              },
+                              "&:hover fieldset": {
+                                borderColor: "secondary.main",
+                              },
+                              "&.Mui-focused fieldset": {
+                                borderColor: "secondary.main",
+                              },
+                            },
+                            "& .MuiInputLabel-root": {
+                              "&.Mui-focused": {
+                                color: "secondary.main",
+                              },
+                            },
                           }}
-                        >
-                          Icon
-                        </InputLabel>
-                        <input
-                          accept="image/*"
-                          style={{ display: "none" }}
-                          id={`icon-upload-${index}`}
-                          type="file"
-                          onChange={(e) => {
-                            field.onChange(e.target.files[0]);
-                            handleImageChange(e, index);
-                          }}
+                          error={!!errors.includes?.[index]?.description}
+                          helperText={
+                            errors.includes?.[index]?.description?.message
+                          }
                         />
-                        <label htmlFor={`icon-upload-${index}`}>
-                          <IconButton component="span">
-                            <Avatar
-                              src={imagePreviews[index] || ""}
-                              sx={{
-                                cursor: "pointer",
-                                width: 56,
-                                height: 56,
-                                border: `3px solid ${theme.palette.secondary.main}`,
-                                backgroundColor: imagePreviews[index]
-                                  ? "transparent"
-                                  : "grey.300",
-                              }}
-                            >
-                              {!imagePreviews[index] && <PhotoLibraryIcon />}
-                            </Avatar>
-                          </IconButton>
-                        </label>
-                        {errors?.includes?.[index]?.message && (
-                          <Typography
-                            color="error"
+                      )}
+                    />
+
+                    <Controller
+                      control={control}
+                      name={`includes.${index}.icon`}
+                      render={({ field }) => (
+                        <Box>
+                          <InputLabel
                             sx={{
-                              fontSize: "11px",
-                              marginLeft: "15px",
+                              display: "flex",
+                              justifyContent: "center",
                             }}
                           >
-                            {errors?.includes?.[index]?.message}
-                          </Typography>
-                        )}
-                      </Box>
+                            Icon
+                          </InputLabel>
+
+                          <input
+                            accept="image/*"
+                            style={{ display: "none" }}
+                            id={`icon-upload-${index}`}
+                            type="file"
+                            onChange={(e) => {
+                              handleIconChange(e, index);
+                              field.onChange(iconPreviews[index]);
+                            }}
+                          />
+                          <label htmlFor={`icon-upload-${index}`}>
+                            <IconButton component="span">
+                              <Avatar
+                                src={iconPreviews[index] || ""}
+                                sx={{
+                                  cursor: "pointer",
+                                  width: 56,
+                                  height: 56,
+                                  border: `3px solid ${theme.palette.secondary.main}`,
+                                  backgroundColor: iconPreviews[index]
+                                    ? "transparent"
+                                    : "grey.300",
+                                }}
+                              >
+                                {!iconPreviews[index] && <PhotoLibraryIcon />}
+                              </Avatar>
+                            </IconButton>
+                          </label>
+                          {errors?.includes?.[index]?.icon?.message && (
+                            <Typography
+                              color="error"
+                              sx={{
+                                fontSize: "11px",
+                                marginLeft: "15px",
+                              }}
+                            >
+                              {errors?.includes?.[index]?.icon?.message}
+                            </Typography>
+                          )}
+                        </Box>
+                      )}
+                    />
+                  </Box>
+
+                  <Box display="flex" gap="20px">
+                    {index > 0 && (
+                      <Button
+                        type="button"
+                        variant="contained"
+                        color="secondary"
+                        size="medium"
+                        sx={{
+                          marginTop: "10px",
+                          marginBottom: "10px",
+                          width: "150px",
+                        }}
+                        onClick={() => removeIncludes(index)}
+                      >
+                        Remove
+                      </Button>
                     )}
-                  />
-                </Box>
-              </Fragment>
-            ))}
+
+                    <Button
+                      type="button"
+                      variant="contained"
+                      color="secondary"
+                      size="medium"
+                      sx={{
+                        marginTop: "10px",
+                        marginBottom: "10px",
+                        width: "150px",
+                      }}
+                      onClick={() =>
+                        appendIncludes({
+                          description: "",
+                          icon: "",
+                        })
+                      }
+                    >
+                      Add Includes
+                    </Button>
+                  </Box>
+                </Fragment>
+              ))}
+            </Box>
+
+            <Divider sx={{ marginTop: "50px" }} />
+
+            <Box marginTop="40px">
+              <Box marginBottom="20px">
+                <Header subtitle="Media" />
+              </Box>
+
+              {mediaFields.map((media, index) => (
+                <Fragment key={media.id}>
+                  <Box display="flex" justifyContent="space-between">
+                    <Box
+                      alignSelf={`${index > 0 ? "center" : ""}`}
+                      marginTop={`${index > 0 ? "40px" : "70px"}`}
+                      sx={{
+                        maxWidth: "150px",
+                      }}
+                    >
+                      <Button
+                        type="button"
+                        variant="contained"
+                        color="secondary"
+                        size="medium"
+                        sx={{
+                          width: "150px",
+                          maxHeight: "33px",
+                        }}
+                        onClick={() =>
+                          appendMedia({
+                            image: "",
+                          })
+                        }
+                      >
+                        Add Image
+                      </Button>
+
+                      {index > 0 && (
+                        <Button
+                          type="button"
+                          variant="contained"
+                          color="secondary"
+                          size="medium"
+                          sx={{
+                            marginTop: "10px",
+                            marginBottom: "10px",
+                            width: "150px",
+                            maxHeight: "33px",
+                          }}
+                          onClick={() => removeMedia(index)}
+                        >
+                          Remove
+                        </Button>
+                      )}
+                    </Box>
+
+                    <Controller
+                      name={`media.${index}.image`}
+                      control={control}
+                      render={({ field }) => (
+                        <Box>
+                          <InputLabel
+                            sx={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                          >
+                            Image
+                          </InputLabel>
+
+                          <input
+                            accept="image/*"
+                            style={{ display: "none" }}
+                            type="file"
+                            id={`image-${index}`}
+                            onChange={(e) => {
+                              handleImageChange(e, index);
+                              field.onChange(imagePreviews[index]);
+                            }}
+                          />
+
+                          <label htmlFor={`image-${index}`}>
+                            <IconButton
+                              component="span"
+                              sx={{
+                                width: "180px",
+                                height: "180px",
+                                borderRadius: "0",
+                              }}
+                            >
+                              <Avatar
+                                src={imagePreviews[index] || ""}
+                                sx={{
+                                  cursor: "pointer",
+                                  borderRadius: "0px",
+                                  width: 150,
+                                  height: 150,
+                                  border: `3px solid ${theme.palette.secondary.main}`,
+                                  backgroundColor: imagePreviews[index]
+                                    ? "transparent"
+                                    : "grey.300",
+                                }}
+                              >
+                                {!imagePreviews[index] && <PhotoLibraryIcon />}
+                              </Avatar>
+                            </IconButton>
+                          </label>
+
+                          {errors?.media?.[index]?.image?.message && (
+                            <Typography
+                              color="error"
+                              sx={{
+                                fontSize: "11px",
+                                marginLeft: "15px",
+                              }}
+                            >
+                              {errors?.media?.[index]?.image?.message}
+                            </Typography>
+                          )}
+                        </Box>
+                      )}
+                    />
+                  </Box>
+                </Fragment>
+              ))}
+            </Box>
           </Stack>
         </Box>
       </form>
