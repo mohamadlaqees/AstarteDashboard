@@ -69,6 +69,10 @@ const Addproject = () => {
             marginLeft="auto"
             marginRight="auto"
           >
+            <Box paddingBottom="20px">
+              <Header subtitle="Project info" />
+            </Box>
+
             <Controller
               name="name"
               control={control}
@@ -79,6 +83,7 @@ const Addproject = () => {
                   autoFocus
                   sx={{
                     marginBottom: "20px",
+                    marginTop: "20px",
                     "& .MuiOutlinedInput-root": {
                       "& fieldset": {
                         borderColor: theme.palette.primary,

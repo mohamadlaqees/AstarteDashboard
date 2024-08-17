@@ -3,11 +3,11 @@ import { useGetAllExperiencesQuery } from "../../store/apiSlice/apiSlice";
 import { Box, Collapse, IconButton, Typography, useTheme } from "@mui/material";
 import Header from "../../components/Header";
 import { DataGrid } from "@mui/x-data-grid";
+import FolderIcon from "@mui/icons-material/Folder";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import { dataExperience } from "./dataExperience";
 import { useNavigate } from "react-router-dom";
 
 const Tours = () => {
@@ -15,6 +15,10 @@ const Tours = () => {
   const navigate = useNavigate();
   const { data: experiences, isLoading } = useGetAllExperiencesQuery();
   console.log(experiences);
+
+  const handleInfo = (id) => {
+    navigate(`tourInfo/${id}`);
+  };
 
   const handleEdit = (id) => {
     navigate(`${id}`);
@@ -106,11 +110,18 @@ const Tours = () => {
     {
       field: "actions",
       headerName: "Actions",
-      flex: 1,
+      flex: 2,
       sortable: false,
       renderCell: (params) => {
         return (
           <Box>
+            <IconButton
+              title="show details"
+              onClick={() => handleInfo(params.row.id)}
+              color="secondary"
+            >
+              <FolderIcon />
+            </IconButton>
             <IconButton
               onClick={() => handleEdit(params.row.id)}
               color="secondary"

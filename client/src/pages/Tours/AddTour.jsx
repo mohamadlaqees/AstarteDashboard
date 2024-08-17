@@ -149,6 +149,10 @@ const AddTour = () => {
             marginRight="auto"
             overflow="auto"
           >
+            <Box paddingBottom="20px">
+              <Header subtitle="Experience info" />
+            </Box>
+
             <Controller
               name="title"
               control={control}
@@ -420,6 +424,10 @@ const AddTour = () => {
                   </FormControl>
                 )}
               />
+            </Box>
+
+            <Box paddingBottom="20px">
+              <Header subtitle="Itinerary" />
             </Box>
 
             {fields.map((field, index) => (
