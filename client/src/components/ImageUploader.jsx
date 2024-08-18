@@ -23,7 +23,9 @@ const ImageUploader = ({
         const newImagePreviews = [...imagePreviews];
         newImagePreviews[index] = reader.result;
         setImagePreviews(newImagePreviews);
-        field.onChange(reader.result);
+        const formData = new FormData();
+        formData.append("image", file);
+        field.onChange(formData);
       };
       reader.readAsDataURL(file);
     }

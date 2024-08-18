@@ -7,6 +7,7 @@ const IconUploader = ({
   index,
   src,
   sx,
+  iconSx,
   disabled,
   field,
   iconPreviews = [],
@@ -21,7 +22,9 @@ const IconUploader = ({
         const newIconPreviews = [...iconPreviews];
         newIconPreviews[index] = reader.result;
         setIconPreviews(newIconPreviews);
-        field.onChange(reader.result);
+        const formData = new FormData();
+        formData.append("icon", file);
+        field.onChange(formData);
       };
       reader.readAsDataURL(file);
     }
@@ -50,14 +53,7 @@ const IconUploader = ({
       />
 
       <label htmlFor={`icon-${index}`}>
-        <IconButton
-          component="span"
-          sx={{
-            width: "56px",
-            height: "56px",
-          }}
-          disabled={disabled}
-        >
+        <IconButton component="span" sx={iconSx} disabled={disabled}>
           <Avatar
             src={src || ""}
             sx={{
