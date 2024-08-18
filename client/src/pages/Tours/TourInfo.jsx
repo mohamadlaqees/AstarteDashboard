@@ -19,7 +19,7 @@ import ImageListComponent from "../../components/ImageListComponent";
 const TourInfo = () => {
   const theme = useTheme();
   const { tourid } = useParams();
-  const { data: experience } = useGetExperienceQuery(tourid);
+  const { data: experience, isLoading } = useGetExperienceQuery(tourid);
 
   const columns = [
     { id: "description", label: "Description", minWidth: 100 },
@@ -63,7 +63,17 @@ const TourInfo = () => {
       });
     });
   }
-  return (
+  return isLoading ? (
+    <CircularProgress
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "55%",
+      }}
+      size={60}
+      thickness={3}
+    />
+  ) : (
     <>
       <Box margin="40px">
         <Header title="Tour" subtitle={tourid} />
@@ -282,7 +292,7 @@ const TourInfo = () => {
           marginRight="auto"
           overflow="auto"
         >
-          <Box>
+          <Box maxHeight={"300px"} overflow={"auto"}>
             <Box marginBottom="40px">
               <Header subtitle="Includes" />
               <TableComponent
@@ -296,7 +306,7 @@ const TourInfo = () => {
 
           <Divider />
 
-          <Box marginTop="40px">
+          <Box marginTop="40px" maxHeight={"300px"} overflow={"auto"}>
             <Box marginBottom="40px">
               <Header subtitle="Media" />
             </Box>
