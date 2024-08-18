@@ -46,6 +46,24 @@ const ProjectInfo = () => {
           />
 
           <TextField
+            label="isEducational"
+            variant="standard"
+            value={""}
+            disabled
+            InputLabelProps={{
+              style: {
+                color: theme.palette.secondary.main,
+                fontSize: "18px",
+              },
+            }}
+            InputProps={{
+              sx: {
+                marginBottom: "20px",
+              },
+            }}
+          />
+
+          <TextField
             label="Description"
             variant="standard"
             value={""}
@@ -83,6 +101,24 @@ const ProjectInfo = () => {
 
           <TextField
             label="StartingPoint"
+            variant="standard"
+            value={""}
+            disabled
+            InputLabelProps={{
+              style: {
+                color: theme.palette.secondary.main,
+                fontSize: "18px",
+              },
+            }}
+            InputProps={{
+              sx: {
+                marginBottom: "20px",
+              },
+            }}
+          />
+
+          <TextField
+            label="Data"
             variant="standard"
             value={""}
             disabled
