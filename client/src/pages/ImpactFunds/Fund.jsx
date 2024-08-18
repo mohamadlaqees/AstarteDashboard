@@ -1,27 +1,36 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   Stack,
   TextField,
   Typography,
   useTheme,
 } from "@mui/material";
-import { addFundSchema } from "../../Utils/Validations";
+import { addOrUpdateFundSchema } from "../../Utils/Validations";
 import Header from "../../components/Header";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  useGetFundQuery,
+  useUpdateFundMutation,
+} from "../../store/apiSlice/apiSlice";
+import { LoadingButton } from "@mui/lab";
 
 const Fund = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const { fundid } = useParams();
+  const { data: fund, isLoading, refetch } = useGetFundQuery(fundid);
+  console.log(fund);
+  const [updateFund, { isError, isLoading: updateLoading, isSuccess, error }] =
+    useUpdateFundMutation();
+
   const {
     control,
     handleSubmit,
@@ -29,23 +38,17 @@ const Fund = () => {
     reset,
   } = useForm({
     defaultValues: {
-      project: {
-        name: "",
-        description: "",
-        location: "",
-        startingPoint: "",
-      },
+      project: "",
       totalAmount: 0,
       allocatedAmount: 0,
       donors: [
         {
           donation: 0,
-          type: "",
           date: "",
         },
       ],
     },
-    resolver: yupResolver(addFundSchema),
+    resolver: yupResolver(addOrUpdateFundSchema),
     mode: "onBlur",
   });
 
@@ -54,28 +57,45 @@ const Fund = () => {
     name: "donors",
   });
 
-  const submitHandler = (data) => {
-    reset({
-      project: {
-        name: "",
-        description: "",
-        location: "",
-        startingPoint: "",
-      },
-      totalAmount: 0,
-      allocatedAmount: 0,
-      donors: [
-        {
-          donation: 0,
-          type: "",
-          date: "",
-        },
-      ],
-    });
+  const submitHandler = async (data) => {
+    console.log(data);
+    try {
+      await updateFund({ updatedFund: data, id: fundid })
+        .unwrap()
+        .then(() => {
+          navigate("/funds");
+        });
+    } catch (error) {}
+
     console.log(data);
   };
 
-  return (
+  useEffect(() => {
+    refetch();
+    if (fund) {
+      reset({
+        project: fund?.document.project || "",
+        totalAmount: fund?.document.totalAmount || 0,
+        allocatedAmount: fund?.document.allocatedAmount || 0,
+        donors: fund?.document?.donors.map((donor) => ({
+          donation: donor.donation || 0,
+          date: donor.date || "",
+        })),
+      });
+    }
+  }, [fund, reset]);
+
+  return isLoading ? (
+    <CircularProgress
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "55%",
+      }}
+      size={60}
+      thickness={3}
+    />
+  ) : (
     <>
       <Box margin="40px">
         <Header title={`Fund : ${fundid}`} subtitle="Update fund info" />
@@ -94,7 +114,7 @@ const Fund = () => {
               <Header subtitle="Project info" />
             </Box>
             <Controller
-              name="project.name"
+              name="project"
               control={control}
               render={({ field }) => (
                 <TextField
@@ -122,102 +142,6 @@ const Fund = () => {
                   }}
                   error={!!errors?.project?.name || undefined}
                   helperText={errors?.project?.name?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name="project.description"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Description"
-                  sx={{
-                    marginBottom: "20px",
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: theme.palette.primary,
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "secondary.main",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "secondary.main",
-                      },
-                    },
-                    "& .MuiInputLabel-root": {
-                      "&.Mui-focused": {
-                        color: "secondary.main",
-                      },
-                    },
-                  }}
-                  error={!!errors?.project?.description || undefined}
-                  helperText={errors?.project?.description?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name="project.location"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Location"
-                  sx={{
-                    marginBottom: "20px",
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: theme.palette.primary,
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "secondary.main",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "secondary.main",
-                      },
-                    },
-                    "& .MuiInputLabel-root": {
-                      "&.Mui-focused": {
-                        color: "secondary.main",
-                      },
-                    },
-                  }}
-                  error={!!errors?.project?.location || undefined}
-                  helperText={errors?.project?.location?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name="project.startingPoint"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="StartingPoint"
-                  sx={{
-                    marginBottom: "20px",
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: theme.palette.primary,
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "secondary.main",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "secondary.main",
-                      },
-                    },
-                    "& .MuiInputLabel-root": {
-                      "&.Mui-focused": {
-                        color: "secondary.main",
-                      },
-                    },
-                  }}
-                  error={!!errors?.project?.startingPoint || undefined}
-                  helperText={errors?.project?.startingPoint?.message}
                 />
               )}
             />
@@ -285,191 +209,6 @@ const Fund = () => {
                 />
               )}
             />
-          </Stack>
-
-          <Stack
-            marginTop="20px"
-            width="30%"
-            marginLeft="auto"
-            marginRight="auto"
-            overflow="auto"
-          >
-            <Box paddingBottom="20px">
-              <Header subtitle="Donnors info" />
-            </Box>
-            {fields.map((field, index) => (
-              <Fragment key={field.id}>
-                <Controller
-                  name={`donors.${index}.donation`}
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      type="text"
-                      label="Donation"
-                      sx={{
-                        marginTop: "20px",
-                        marginBottom: "20px",
-                        "& .MuiOutlinedInput-root": {
-                          "& fieldset": {
-                            borderColor: theme.palette.primary,
-                          },
-                          "&:hover fieldset": {
-                            borderColor: "secondary.main",
-                          },
-                          "&.Mui-focused fieldset": {
-                            borderColor: "secondary.main",
-                          },
-                        },
-                        "& .MuiInputLabel-root": {
-                          "&.Mui-focused": {
-                            color: "secondary.main",
-                          },
-                        },
-                      }}
-                      error={!!errors?.donors?.[index]?.donation || undefined}
-                      helperText={errors?.donors?.[index]?.donation?.message}
-                    />
-                  )}
-                />
-
-                <Controller
-                  name={`donors.${index}.type`}
-                  control={control}
-                  render={({ field }) => (
-                    <FormControl
-                      fullWidth
-                      error={!!errors?.donors?.[index]?.type}
-                    >
-                      <InputLabel id={`type-label-${index}`}>Type</InputLabel>
-                      <Select
-                        {...field}
-                        labelId={`type-label-${index}`}
-                        id={`type-select-${index}`}
-                        label="Type"
-                        sx={{
-                          marginBottom: "5px",
-                          "& .MuiOutlinedInput-root": {
-                            "& fieldset": {
-                              borderColor: theme.palette.primary.main,
-                            },
-                            "&:hover fieldset": {
-                              borderColor: "secondary.main",
-                            },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "secondary.main",
-                            },
-                          },
-                          "& .MuiInputLabel-root": {
-                            "&.Mui-focused": {
-                              color: "secondary.main",
-                            },
-                          },
-                        }}
-                      >
-                        <MenuItem value={"Visitor"}>Visitor</MenuItem>
-                        <MenuItem value={"Option1"}>Option1</MenuItem>
-                        <MenuItem value={"Option2"}>Option2</MenuItem>
-                      </Select>
-                      {errors?.donors?.[index]?.type?.message && (
-                        <Typography
-                          color="error"
-                          sx={{
-                            fontSize: "11px",
-                            marginLeft: "15px",
-                          }}
-                        >
-                          {" "}
-                          {errors?.donors?.[index]?.type?.message}
-                        </Typography>
-                      )}
-                    </FormControl>
-                  )}
-                />
-
-                <Controller
-                  name={`donors.${index}.date`}
-                  control={control}
-                  render={({ field }) => (
-                    <FormControl
-                      fullWidth
-                      error={!!errors?.donors?.[index]?.date}
-                      sx={{ marginTop: "20px", marginBottom: "20px" }}
-                    >
-                      <DatePicker
-                        {...field}
-                        value={field.value ? dayjs(field.value) : null}
-                        onChange={(date) => {
-                          field.onChange(date);
-                        }}
-                        label="Date"
-                        slotProps={{
-                          textField: {
-                            variant: "outlined",
-                          },
-                        }}
-                        sx={{
-                          "& .MuiOutlinedInput-root": {
-                            "& fieldset": {
-                              borderColor: theme.palette.primary.main,
-                            },
-                            "&:hover fieldset": {
-                              borderColor: "secondary.main",
-                            },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "secondary.main",
-                            },
-                          },
-                          "& .MuiInputLabel-root": {
-                            "&.Mui-focused": {
-                              color: "secondary.main",
-                            },
-                          },
-                        }}
-                      />
-                    </FormControl>
-                  )}
-                />
-
-                {index > 0 && (
-                  <Button
-                    type="button"
-                    variant="contained"
-                    color="secondary"
-                    size="medium"
-                    sx={{
-                      marginTop: "10px",
-                      marginBottom: "10px",
-                      width: "150px",
-                    }}
-                    onClick={() => remove(index)}
-                  >
-                    Remove
-                  </Button>
-                )}
-              </Fragment>
-            ))}
-
-            <Button
-              type="button"
-              variant="contained"
-              color="secondary"
-              size="medium"
-              sx={{
-                marginTop: "10px",
-                marginBottom: "10px",
-                width: "150px",
-              }}
-              onClick={() =>
-                append({
-                  donation: null,
-                  type: "",
-                  date: "",
-                })
-              }
-            >
-              Add Donors
-            </Button>
 
             <Button
               type="submit"
@@ -485,8 +224,143 @@ const Fund = () => {
               }}
               disabled={!isDirty || !isValid || isSubmitting}
             >
-              Save
+              {isSubmitting ? (
+                <LoadingButton variant="text" loading sx={{ width: "130px" }}>
+                  Save{" "}
+                </LoadingButton>
+              ) : (
+                "Save"
+              )}{" "}
+              {isError && (
+                <Typography color={"error"}>{error?.data?.message}</Typography>
+              )}
             </Button>
+          </Stack>
+
+          <Stack margin="auto" width="30%">
+            <Box paddingBottom="20px">
+              <Header subtitle="Donnors info" />
+            </Box>
+            <Stack overflow="auto" maxHeight={"375px"}>
+              {fields.map((field, index) => (
+                <Fragment key={field.id}>
+                  <Controller
+                    name={`donors.${index}.donation`}
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        type="text"
+                        label="Donation"
+                        sx={{
+                          marginTop: "20px",
+                          marginBottom: "20px",
+                          "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                              borderColor: theme.palette.primary,
+                            },
+                            "&:hover fieldset": {
+                              borderColor: "secondary.main",
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "secondary.main",
+                            },
+                          },
+                          "& .MuiInputLabel-root": {
+                            "&.Mui-focused": {
+                              color: "secondary.main",
+                            },
+                          },
+                        }}
+                        error={!!errors?.donors?.[index]?.donation || undefined}
+                        helperText={errors?.donors?.[index]?.donation?.message}
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name={`donors.${index}.date`}
+                    control={control}
+                    render={({ field }) => (
+                      <FormControl
+                        fullWidth
+                        error={!!errors?.donors?.[index]?.date}
+                        sx={{ marginTop: "20px", marginBottom: "20px" }}
+                      >
+                        <DatePicker
+                          {...field}
+                          value={field.value ? dayjs(field.value) : null}
+                          onChange={(date) => {
+                            field.onChange(date);
+                          }}
+                          label="Date"
+                          slotProps={{
+                            textField: {
+                              variant: "outlined",
+                            },
+                          }}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              "& fieldset": {
+                                borderColor: theme.palette.primary.main,
+                              },
+                              "&:hover fieldset": {
+                                borderColor: "secondary.main",
+                              },
+                              "&.Mui-focused fieldset": {
+                                borderColor: "secondary.main",
+                              },
+                            },
+                            "& .MuiInputLabel-root": {
+                              "&.Mui-focused": {
+                                color: "secondary.main",
+                              },
+                            },
+                          }}
+                        />
+                      </FormControl>
+                    )}
+                  />
+
+                  {index > 0 && (
+                    <Button
+                      type="button"
+                      variant="contained"
+                      color="secondary"
+                      size="medium"
+                      sx={{
+                        marginTop: "10px",
+                        marginBottom: "10px",
+                        width: "150px",
+                      }}
+                      onClick={() => remove(index)}
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </Fragment>
+              ))}
+
+              <Button
+                type="button"
+                variant="contained"
+                color="secondary"
+                size="medium"
+                sx={{
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                  width: "150px",
+                }}
+                onClick={() =>
+                  append({
+                    donation: null,
+                    date: "",
+                  })
+                }
+              >
+                Add Donors
+              </Button>
+            </Stack>
           </Stack>
         </Box>
       </form>
