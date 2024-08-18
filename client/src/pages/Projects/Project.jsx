@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -18,6 +18,7 @@ import Header from "../../components/Header";
 import { useParams } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import ImageUploader from "../../components/ImageUploader";
 
 const Project = () => {
   const theme = useTheme();
@@ -38,6 +39,7 @@ const Project = () => {
     resolver: yupResolver(addOrUpdateProjectSchema),
     mode: "onBlur",
   });
+  const [imagePreviews, setImagePreviews] = useState([]);
 
   const submitHandler = (data) => {
     console.log(data);
@@ -307,6 +309,50 @@ const Project = () => {
             >
               Save
             </Button>
+          </Stack>
+
+          <Stack
+            width="30%"
+            marginLeft="auto"
+            marginRight="auto"
+            marginBottom="auto"
+            marginTop="auto"
+          >
+            <Box paddingBottom="20px">
+              <Header subtitle="Project image" />
+            </Box>
+
+            <Controller
+              name="image"
+              control={control}
+              render={({ field }) => (
+                <ImageUploader
+                  errorMessage={errors?.image?.message}
+                  field={field}
+                  index={0}
+                  label={"Image"}
+                  key={field.id}
+                  src={imagePreviews[0]}
+                  imagePreviews={imagePreviews}
+                  setImagePreviews={setImagePreviews}
+                  sx={{
+                    cursor: "pointer",
+                    borderRadius: "0px",
+                    width: 250,
+                    height: 250,
+                    border: `3px solid ${theme.palette.secondary.main}`,
+                  }}
+                  boxSx={{
+                    margin: "auto",
+                  }}
+                  iconSx={{
+                    width: "270px",
+                    height: "270px",
+                    borderRadius: "0px",
+                  }}
+                />
+              )}
+            />
           </Stack>
         </Box>
       </form>
