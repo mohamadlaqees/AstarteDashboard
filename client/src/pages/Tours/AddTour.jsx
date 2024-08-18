@@ -22,9 +22,14 @@ import dayjs from "dayjs";
 import NumberInputComponent from "../../components/NumberInputComponent";
 import ImageUploader from "../../components/ImageUploader";
 import IconUploader from "../../components/IconUploader";
+import { useAddExperienceMutation } from "../../store/apiSlice/apiSlice";
+import { LoadingButton } from "@mui/lab";
 
 const AddTour = () => {
   const theme = useTheme();
+  const [addExperience, { isLoading, isSuccess, isError, error }] =
+    useAddExperienceMutation();
+
   const {
     control,
     handleSubmit,
@@ -58,6 +63,8 @@ const AddTour = () => {
   });
   const [iconPreviews, setIconPreviews] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [selectedFiles2, setSelectedFiles2] = useState([]);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -82,30 +89,38 @@ const AddTour = () => {
     name: "includes",
   });
 
-  const submitHandler = (data) => {
-    reset({
-      title: "",
-      status: "",
-      bookedSeats: "",
-      registrationStartDate: null,
-      registrationEndDate: null,
-      description: "",
-      duration: "",
-      rating: 0,
-      itinerary: [{ milestoneName: "", location: "" }],
-      includes: [
-        {
-          description: "",
-          icon: "",
-        },
-      ],
-      media: [
-        {
-          image: "",
-        },
-      ],
-    });
+  const submitHandler = async (data) => {
     console.log(data);
+    try {
+      await addExperience(data)
+        .unwrap()
+        .then(() => {
+          !isSubmitting
+            ? reset({
+                title: "",
+                status: "",
+                bookedSeats: "",
+                registrationStartDate: null,
+                registrationEndDate: null,
+                description: "",
+                duration: "",
+                rating: 0,
+                itinerary: [{ milestoneName: "", location: "" }],
+                includes: [
+                  {
+                    description: "",
+                    icon: "",
+                  },
+                ],
+                media: [
+                  {
+                    image: "",
+                  },
+                ],
+              })
+            : "";
+        });
+    } catch (error) {}
   };
 
   return (
@@ -533,7 +548,18 @@ const AddTour = () => {
               }}
               disabled={!isDirty || !isValid || isSubmitting}
             >
-              Add Tour
+              {isSubmitting ? (
+                <LoadingButton
+                  variant="text"
+                  loading
+                  sx={{ width: "130px" }}
+                  loadingPosition="start"
+                >
+                  Add Tour
+                </LoadingButton>
+              ) : (
+                "Add Tour"
+              )}{" "}
             </Button>
           </Stack>
 
@@ -544,7 +570,7 @@ const AddTour = () => {
             marginRight="auto"
             overflow="auto"
           >
-            <Box>
+            <Box maxHeight={"300px"} overflow={"auto"}>
               <Box marginBottom="20px">
                 <Header subtitle="Includes" />
               </Box>
@@ -607,9 +633,15 @@ const AddTour = () => {
                             height: "56px",
                             border: `3px solid ${theme.palette.secondary.main}`,
                           }}
+                          iconSx={{
+                            width: "76px",
+                            height: "76px",
+                          }}
                           iconPreviews={iconPreviews}
                           key={index}
                           setIconPreviews={setIconPreviews}
+                          selectedFiles2={selectedFiles2}
+                          setSelectedFiles2={setSelectedFiles2}
                         />
                       )}
                     />
@@ -659,7 +691,7 @@ const AddTour = () => {
 
             <Divider sx={{ marginTop: "50px" }} />
 
-            <Box marginTop="40px">
+            <Box marginTop="40px" maxHeight={"300px"} overflow={"auto"}>
               <Box marginBottom="20px">
                 <Header subtitle="Media" />
               </Box>
@@ -731,8 +763,15 @@ const AddTour = () => {
                             height: 150,
                             border: `3px solid ${theme.palette.secondary.main}`,
                           }}
+                          iconSx={{
+                            width: "170px",
+                            height: "170px",
+                            borderRadius: "0px",
+                          }}
                           imagePreviews={imagePreviews}
                           setImagePreviews={setImagePreviews}
+                          selectedFiles={selectedFiles}
+                          setSelectedFiles={setSelectedFiles}
                         />
                       )}
                     />
