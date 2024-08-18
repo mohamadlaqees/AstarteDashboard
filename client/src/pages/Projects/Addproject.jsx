@@ -18,9 +18,13 @@ import Header from "../../components/Header";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import ImageUploader from "../../components/ImageUploader";
+import { useAddProjectMutation } from "../../store/apiSlice/apiSlice";
+import { LoadingButton } from "@mui/lab";
 
 const Addproject = () => {
   const theme = useTheme();
+  const [addProject, { isError, isLoading, isSuccess }] =
+    useAddProjectMutation();
   const {
     control,
     handleSubmit,
@@ -41,16 +45,27 @@ const Addproject = () => {
   });
   const [imagePreviews, setImagePreviews] = useState([]);
 
-  const submitHandler = (data) => {
-    reset({
-      name: "",
-      isEducational: "",
-      description: "",
-      location: "",
-      startingPoint: "",
-      date: "",
-      image: "",
-    });
+  const submitHandler = async (data) => {
+    console.log(data)
+    try {
+      await addProject(data)
+        .unwrap()
+        .then(() => {
+          !isSubmitting
+            ? (reset({
+                name: "",
+                isEducational: "",
+                description: "",
+                location: "",
+                startingPoint: "",
+                date: "",
+                image: "",
+              }),
+              setImagePreviews([]))
+            : "";
+        });
+    } catch (error) {}
+
     console.log(data);
   };
 
@@ -140,8 +155,8 @@ const Addproject = () => {
                       },
                     }}
                   >
-                    <MenuItem value={"True"}>True</MenuItem>
-                    <MenuItem value={"False"}>False</MenuItem>
+                    <MenuItem value={true}>True</MenuItem>
+                    <MenuItem value={false}>False</MenuItem>
                   </Select>
                   {errors?.isEducational?.message && (
                     <Typography
@@ -313,7 +328,18 @@ const Addproject = () => {
               }}
               disabled={!isDirty || !isValid || isSubmitting}
             >
-              Add Project
+              {isSubmitting ? (
+                <LoadingButton
+                  variant="text"
+                  loading
+                  sx={{ width: "130px" }}
+                  loadingPosition="start"
+                >
+                  Add Project
+                </LoadingButton>
+              ) : (
+                "Add Project"
+              )}
             </Button>
           </Stack>
 
