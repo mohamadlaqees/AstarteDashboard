@@ -1,46 +1,28 @@
 export const dataExperience = [
   {
-    _id: "63701cc1f03239c72c00017f",
-    title: "Konstantine",
-    description: "Konstantine Konstantine Konstantine",
-    duration: "2 days",
-    rating: 5,
+    status: "available",
+    bookedSeats: 0,
+    registrationStartDate: null,
+    registrationEndDate: null,
+    title: "National Paradigm Manager",
+    description: "Laboriosam deserunt qui aut aut dolorem.",
     itinerary: [
-      { milestoneName: "Milestone 1", location: "Location 1" },
-      { milestoneName: "Milestone 2", location: "Location 2" },
+      {
+        milestoneName: "Internal Usability Supervisor",
+        location: "Brockton",
+      },
     ],
-  },
-  {
-    _id: "63701cc1f03239c72c00017f",
-    title: "Konstantine",
-    description: "Konstantine Konstantine Konstantine",
-    duration: "2 days",
-    rating: 5,
-    itinerary: [
-      { milestoneName: "Milestone 1", location: "Location 1" },
-      { milestoneName: "Milestone 2", location: "Location 2" },
+    duration: "Friday days",
+    rating: 0,
+    includes: [
+      {
+        description:
+          "Alias atque vero laborum aut mollitia et qui blanditiis rerum.",
+        icon: "https://queen.com",
+      },
     ],
-  },
-  {
-    _id: "63701cc1f03239c72c00017f",
-    title: "Konstantine",
-    description: "Konstantine Konstantine Konstantine",
-    duration: "2 days",
-    rating: 5,
-    itinerary: [
-      { milestoneName: "Milestone 1", location: "Location 1" },
-      { milestoneName: "Milestone 2", location: "Location 2" },
-    ],
-  },
-  {
-    _id: "63701cc1f03239c72c00017f",
-    title: "Konstantine",
-    description: "Konstantine Konstantine Konstantine",
-    duration: "2 days",
-    rating: 5,
-    itinerary: [
-      { milestoneName: "Milestone 1", location: "Location 1" },
-      { milestoneName: "Milestone 2", location: "Location 2" },
-    ],
+    media: ["http://placeimg.com/640/480", "http://placeimg.com/640/480"],
+    ratings: [],
+    id: "664a0b37cc1abd94efdd53d2",
   },
 ];

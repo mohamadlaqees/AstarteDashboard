@@ -10,28 +10,86 @@ export const userProfileSchema = yup.object().shape({
     .required("Email is required"),
 });
 
-export const addExperienceSchema = yup.object().shape({
+//Experience
+export const addOrUpdateExperienceSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
+  status: yup.string().required("Status is required"),
+  bookedSeats: yup
+    .number()
+    .required("BookedSeats is required ")
+    .min(1, "BookedSeats must be at least 1"),
   description: yup.string().required("Description is required"),
-  duration: yup.number().required("Duration is required"),
+  duration: yup
+    .mixed()
+    .test(
+      "is-srting-or-number",
+      "Duration must be a string or number",
+      (value) => typeof value === "string" || typeof value === "number"
+    )
+    .required()
+    .test(
+      "is-not-empty",
+      "Duration is required",
+      (value) => value !== "" && value !== undefined && value !== null
+    ),
   rating: yup
     .number()
     .required("Rating is required ")
     .min(1, "Rating must be at least 1"),
-  itinerary: yup
-    .array()
-    .of(
-      yup.object().shape({
-        milestoneName: yup.string().required("Milestone Name is required"),
-        location: yup.string().required("Location is required"),
-      })
-    )
-    .min(1, "At least one itinerary item is required"),
+  registrationStartDate: yup.date().required(),
+  registrationEndDate: yup.date().required(),
+  itinerary: yup.array().of(
+    yup.object().shape({
+      milestoneName: yup.string().required("Milestone Name is required"),
+      location: yup.string().required("Location is required"),
+    })
+  ),
+  includes: yup.array().of(
+    yup.object().shape({
+      description: yup.string().required("Description is required"),
+      icon: yup.string().required("Icon is required"),
+    })
+  ),
+  media: yup.array().of(
+    yup.object().shape({
+      image: yup.string().required("Image is required"),
+    })
+  ),
 });
 
-export const addProjectSchema = yup.object().shape({
+//Projects
+export const addOrUpdateProjectSchema = yup.object().shape({
   name: yup.string().required("Title is required"),
+  isEducational: yup.string().required("IsEducational is required"),
   description: yup.string().required("Description is required"),
   location: yup.string().required("Location is required"),
   startingPoint: yup.string().required("StartingPoint is required"),
+  date: yup.date().required(),
+});
+
+//Impact funds
+export const addFundSchema = yup.object().shape({
+  project: yup.object().shape({
+    name: yup.string().required("Name is required"),
+    description: yup.string().required("Description is required"),
+    location: yup.string().required("Location is required"),
+    startingPoint: yup.string().required("StartingPoint is required"),
+    date: yup.date().required(),
+  }),
+  totalAmount: yup.number().required("TotalAmount is required"),
+  allocatedAmount: yup.number().required("AllocatedAmount is required"),
+  donors: yup.array().of(
+    yup.object().shape({
+      donation: yup
+        .number()
+        .required("Donation is required")
+        .typeError(
+          ({ value }) =>
+            `Donation must be a 'number' type, but the final value was: '${value}' (cast from the value '${
+              value || ""
+            }').`
+        ),
+      type: yup.string().required("Type is required"),
+    })
+  ),
 });

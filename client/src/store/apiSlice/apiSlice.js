@@ -4,11 +4,11 @@ export const apiSlice = createApi({
   reducerPath: "api",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: " https://hp-backend-741l.onrender.com/api/",
-    mode: "no-cors",
+    baseUrl: "https://hp-backend-741l.onrender.com/api/",
   }),
 
   endpoints: (build) => ({
+    //experiences
     getAllExperiences: build.query({
       query: () => "experiences",
     }),
@@ -29,6 +29,17 @@ export const apiSlice = createApi({
     addProject: build.query({}),
     updateProject: build.query({}),
     deleteProject: build.query({}),
+
+    // impact funds
+    getAllImpactFunds: build.query({
+      query: () => "impact-funds",
+    }),
+    getFund: build.query({
+      query: (id) => `impact-funds/${id}`,
+    }),
+    addFund: build.query({}),
+    updateFund: build.query({}),
+    deleteFund: build.query({}),
   }),
 });
 
@@ -43,4 +54,9 @@ export const {
   useAddProjectQuery,
   useUpdateProjectQuery,
   useDeleteProjectQuery,
+  useGetAllImpactFundsQuery,
+  useGetFundQuery,
+  useAddFundQuery,
+  useUpdateFundQuery,
+  useDeleteFundQuery,
 } = apiSlice;

@@ -17,9 +17,11 @@ import { addFundSchema } from "../../Utils/Validations";
 import Header from "../../components/Header";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import { useParams } from "react-router-dom";
 
-const AddFund = () => {
+const Fund = () => {
   const theme = useTheme();
+  const { fundid } = useParams();
   const {
     control,
     handleSubmit,
@@ -76,7 +78,7 @@ const AddFund = () => {
   return (
     <>
       <Box margin="40px">
-        <Header title="Funds" subtitle="Add a new funds" />
+        <Header title={`Fund : ${fundid}`} subtitle="Update fund info" />
       </Box>
 
       <form noValidate onSubmit={handleSubmit(submitHandler)}>
@@ -483,7 +485,7 @@ const AddFund = () => {
               }}
               disabled={!isDirty || !isValid || isSubmitting}
             >
-              Add Fund
+              Save
             </Button>
           </Stack>
         </Box>
@@ -492,4 +494,4 @@ const AddFund = () => {
   );
 };
 
-export default AddFund;
+export default Fund;

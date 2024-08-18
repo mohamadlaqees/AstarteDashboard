@@ -19,6 +19,11 @@ import AddReport from "./pages/Reports/AddReport";
 import Tour from "./pages/Tours/Tour";
 import Addproject from "./pages/Projects/Addproject";
 import Project from "./pages/Projects/Project";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs/AdapterDayjs";
+import FundInfo from "./pages/ImpactFunds/FundInfo";
+import Fund from "./pages/ImpactFunds/Fund";
+import TourInfo from "./pages/Tours/TourInfo";
 
 const App = () => {
   const { theme } = useMode();
@@ -73,12 +78,28 @@ const App = () => {
               element: <Tours />,
             },
             {
+              path: "tourInfo/:tourid",
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <TourInfo />
+                </LocalizationProvider>
+              ),
+            },
+            {
               path: ":tourid",
-              element: <Tour />,
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Tour />
+                </LocalizationProvider>
+              ),
             },
             {
               path: "new",
-              element: <AddTour />,
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <AddTour />
+                </LocalizationProvider>
+              ),
             },
           ],
         },
@@ -106,11 +127,19 @@ const App = () => {
             },
             {
               path: ":projectid",
-              element: <Project />,
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Project />
+                </LocalizationProvider>
+              ),
             },
             {
               path: "new",
-              element: <Addproject />,
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Addproject />
+                </LocalizationProvider>
+              ),
             },
           ],
         },
@@ -123,8 +152,24 @@ const App = () => {
               element: <ImpactFunds />,
             },
             {
+              path: "fundInfo/:fundid",
+              element: <FundInfo />,
+            },
+            {
+              path: ":fundid",
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Fund />
+                </LocalizationProvider>
+              ),
+            },
+            {
               path: "new",
-              element: <AddFund />,
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <AddFund />
+                </LocalizationProvider>
+              ),
             },
           ],
         },

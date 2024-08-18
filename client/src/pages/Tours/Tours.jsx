@@ -3,18 +3,25 @@ import { useGetAllExperiencesQuery } from "../../store/apiSlice/apiSlice";
 import { Box, Collapse, IconButton, Typography, useTheme } from "@mui/material";
 import Header from "../../components/Header";
 import { DataGrid } from "@mui/x-data-grid";
+import FolderIcon from "@mui/icons-material/Folder";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import { dataExperience } from "./dataExperience";
+import { useNavigate } from "react-router-dom";
 
 const Tours = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const { data: experiences, isLoading } = useGetAllExperiencesQuery();
+  console.log(experiences);
 
-  const { data: experiences } = useGetAllExperiencesQuery();
+  const handleInfo = (id) => {
+    navigate(`tourInfo/${id}`);
+  };
 
   const handleEdit = (id) => {
+    navigate(`${id}`);
     console.log(`Edit user with ID: ${id}`);
   };
 
@@ -50,14 +57,34 @@ const Tours = () => {
 
   const columns = [
     {
-      field: "_id",
+      field: "id",
       headerName: "ID",
+      flex: 1,
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 0.5,
+    },
+    {
+      field: "bookedSeats",
+      headerName: "BookedSeats",
+      flex: 0.5,
+    },
+    {
+      field: "registrationStartDate",
+      headerName: "RegistrationStartDate",
+      flex: 1,
+    },
+    {
+      field: "registrationEndDate",
+      headerName: "registrationEndDate",
       flex: 1,
     },
     {
       field: "title",
       headerName: "Title",
-      flex: 0.5,
+      flex: 1,
     },
     {
       field: "description",
@@ -67,12 +94,12 @@ const Tours = () => {
     {
       field: "duration",
       headerName: "Duration",
-      flex: 1,
+      flex: 0.5,
     },
     {
       field: "rating",
       headerName: "Rating",
-      flex: 1,
+      flex: 0.5,
     },
     {
       field: "itinerary",
@@ -83,19 +110,26 @@ const Tours = () => {
     {
       field: "actions",
       headerName: "Actions",
-      flex: 0.5,
+      flex: 2,
       sortable: false,
       renderCell: (params) => {
         return (
           <Box>
             <IconButton
-              onClick={() => handleEdit(params.row._id)}
+              title="show details"
+              onClick={() => handleInfo(params.row.id)}
+              color="secondary"
+            >
+              <FolderIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => handleEdit(params.row.id)}
               color="secondary"
             >
               <EditIcon />
             </IconButton>
             <IconButton
-              onClick={() => handleDelete(params.row._id)}
+              onClick={() => handleDelete(params.row.id)}
               color="secondary"
             >
               <DeleteIcon />
@@ -117,6 +151,9 @@ const Tours = () => {
             border: "none",
           },
           "& .MuiDataGrid-cell": {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "start",
             borderBottom: "none",
             height: "auto",
             minHeight: "50px",
@@ -140,18 +177,11 @@ const Tours = () => {
         }}
       >
         <DataGrid
-          // loading={isLoading || !data}
-          getRowId={(row) => row._id}
-          rows={dataExperience || []}
+          loading={isLoading}
+          getRowId={(row) => row.id}
+          rows={experiences?.results || []}
           columns={columns}
           getRowHeight={() => "auto"}
-          sx={{
-            "& .MuiDataGrid-cell": {
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "start",
-            },
-          }}
         />
       </Box>
     </Box>
