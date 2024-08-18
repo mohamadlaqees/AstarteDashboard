@@ -46,7 +46,7 @@ const Addproject = () => {
   const [imagePreviews, setImagePreviews] = useState([]);
 
   const submitHandler = async (data) => {
-    console.log(data)
+    console.log(data);
     try {
       await addProject(data)
         .unwrap()
