@@ -1,16 +1,47 @@
-import { Box, Stack, TextField, useTheme } from "@mui/material";
-import React, { useEffect } from "react";
+import {
+  Box,
+  CircularProgress,
+  Stack,
+  TextField,
+  useTheme,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import { useParams } from "react-router-dom";
 import ImageUploader from "../../components/ImageUploader";
+import { useGetProjectQuery } from "../../store/apiSlice/apiSlice";
 
 const ProjectInfo = () => {
   const theme = useTheme();
   const { projectid } = useParams();
+  const { data: project, isLoading, refetch } = useGetProjectQuery(projectid);
+  const [response, setResponse] = useState({});
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    refetch();
+    setResponse({
+      name: project?.document?.name,
+      description: project?.document?.description,
+      isEducational: project?.document?.isEducational,
+      location: project?.document?.location,
+      startingPoint: project?.document?.startingPoint,
+      createdAt: project?.document?.createdAt,
+      updatedAt: project?.document?.updatedAt,
+      // image:project?.document?.image           there is no image yet in the hosted backEnd data
+    });
+  }, [project]);
 
-  return (
+  return isLoading ? (
+    <CircularProgress
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "55%",
+      }}
+      size={60}
+      thickness={3}
+    />
+  ) : (
     <>
       <Box margin="40px">
         <Header title="Project" subtitle={projectid} />
@@ -30,7 +61,8 @@ const ProjectInfo = () => {
           <TextField
             label="Name"
             variant="standard"
-            value={""}
+            value={response.name}
+            defaultValue={"Name"}
             disabled
             InputLabelProps={{
               style: {
@@ -48,7 +80,8 @@ const ProjectInfo = () => {
           <TextField
             label="isEducational"
             variant="standard"
-            value={""}
+            value={response.isEducational}
+            defaultValue={"IsEducational"}
             disabled
             InputLabelProps={{
               style: {
@@ -66,7 +99,8 @@ const ProjectInfo = () => {
           <TextField
             label="Description"
             variant="standard"
-            value={""}
+            value={response.description}
+            defaultValue={"Description"}
             disabled
             InputLabelProps={{
               style: {
@@ -84,7 +118,8 @@ const ProjectInfo = () => {
           <TextField
             label="Location"
             variant="standard"
-            value={""}
+            value={response.location}
+            defaultValue={"Location"}
             disabled
             InputLabelProps={{
               style: {
@@ -102,7 +137,8 @@ const ProjectInfo = () => {
           <TextField
             label="StartingPoint"
             variant="standard"
-            value={""}
+            value={response.startingPoint}
+            defaultValue={"StartingPoint"}
             disabled
             InputLabelProps={{
               style: {
@@ -118,9 +154,28 @@ const ProjectInfo = () => {
           />
 
           <TextField
-            label="Data"
+            label="CreatedAt"
             variant="standard"
-            value={""}
+            value={response.createdAt}
+            defaultValue={"CreatedAt"}
+            disabled
+            InputLabelProps={{
+              style: {
+                color: theme.palette.secondary.main,
+                fontSize: "18px",
+              },
+            }}
+            InputProps={{
+              sx: {
+                marginBottom: "20px",
+              },
+            }}
+          />
+          <TextField
+            label="UpdatedAt"
+            variant="standard"
+            value={response.updatedAt}
+            defaultValue={"UpdatedAt"}
             disabled
             InputLabelProps={{
               style: {
