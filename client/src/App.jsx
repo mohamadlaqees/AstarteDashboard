@@ -24,6 +24,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs/AdapterDayjs";
 import FundInfo from "./pages/ImpactFunds/FundInfo";
 import Fund from "./pages/ImpactFunds/Fund";
 import TourInfo from "./pages/Tours/TourInfo";
+import ProjectInfo from "./pages/Projects/ProjectInfo";
 
 const App = () => {
   const { theme } = useMode();
@@ -124,6 +125,14 @@ const App = () => {
             {
               index: true,
               element: <Projects />,
+            },
+            {
+              path: "projectInfo/:projectid",
+              element: (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <ProjectInfo />
+                </LocalizationProvider>
+              ),
             },
             {
               path: ":projectid",
