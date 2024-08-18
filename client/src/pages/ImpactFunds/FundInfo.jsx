@@ -1,43 +1,58 @@
-import { Box, Stack, TextField, useTheme } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Stack,
+  TextField,
+  useTheme,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import TableComponent from "../../components/TableComponent";
 import { useParams } from "react-router-dom";
+import { useGetFundQuery } from "../../store/apiSlice/apiSlice";
 
 const FundInfo = () => {
   const theme = useTheme();
   const { fundid } = useParams();
-  const [fields, setFields] = useState({});
+  const { data: fund, isLoading, refetch } = useGetFundQuery(fundid);
+  const [fields, setFields] = useState([]);
+  const [response, setResponse] = useState({});
 
   const columns = [
     { id: "id", label: "ID", minWidth: 100 },
     { id: "donation", label: "Dontaion", minWidth: 100 },
-    { id: "type", label: "Type", minWidth: 100 },
     { id: "date", label: "Date", minWidth: 100 },
   ];
-  const rows = [];
-
-  if (fields !== undefined && fields.donors !== undefined) {
-    fields.donors.map((field, index) =>
-      rows.push({
-        id: field.id,
-        donation: field.donation,
-        type: field.type,
-        date: field.date,
-      })
-    );
-  }
+  const rows = fields.map((donor, index) => ({
+    id: donor.id,
+    donation: donor.donation || "N/A",
+    type: donor.type || "N/A",
+    date: donor.date || "N/A",
+  }));
 
   useEffect(() => {
-    const getData = async () => {
-      const response = await fetch("/fetchFunds.json");
-      const data = await response.json();
-      setFields(...data);
-    };
-    getData();
-  }, []);
+    refetch();
+    if (fund?.document?.donors) {
+      setFields(fund.document.donors);
+    }
+    setResponse({
+      name: fund?.document?.project,
+      totalAmount: fund?.document?.totalAmount,
+      allocatedAmount: fund?.document?.allocatedAmount,
+    });
+  }, [fund]);
 
-  return (
+  return isLoading ? (
+    <CircularProgress
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "55%",
+      }}
+      size={60}
+      thickness={3}
+    />
+  ) : (
     <>
       <Box margin="40px">
         <Header title="Fund" subtitle={fundid} />
@@ -57,61 +72,8 @@ const FundInfo = () => {
           <TextField
             label="Name"
             variant="standard"
-            value={`${fields.project?.name}`}
-            disabled
-            InputLabelProps={{
-              style: {
-                color: theme.palette.secondary.main,
-                fontSize: "18px",
-              },
-            }}
-            InputProps={{
-              sx: {
-                marginBottom: "20px",
-              },
-            }}
-          />
-
-          <TextField
-            label="Description"
-            variant="standard"
-            value={`${fields.project?.description}`}
-            disabled
-            InputLabelProps={{
-              style: {
-                color: theme.palette.secondary.main,
-                fontSize: "18px",
-              },
-            }}
-            InputProps={{
-              sx: {
-                marginBottom: "20px",
-              },
-            }}
-          />
-
-          <TextField
-            label="Location"
-            variant="standard"
-            value={`${fields.project?.location}`}
-            disabled
-            InputLabelProps={{
-              style: {
-                color: theme.palette.secondary.main,
-                fontSize: "18px",
-              },
-            }}
-            InputProps={{
-              sx: {
-                marginBottom: "20px",
-              },
-            }}
-          />
-
-          <TextField
-            label="StartingPoint"
-            variant="standard"
-            value={`${fields.project?.startingPoint}`}
+            value={response.name}
+            defaultValue={"Name"}
             disabled
             InputLabelProps={{
               style: {
@@ -129,7 +91,8 @@ const FundInfo = () => {
           <TextField
             label="TotalAmount"
             variant="standard"
-            value={`${fields.totalAmount}`}
+            value={response.totalAmount}
+            defaultValue={"TotalAmount"}
             disabled
             InputLabelProps={{
               style: {
@@ -147,7 +110,8 @@ const FundInfo = () => {
           <TextField
             label="AllocatedAmount"
             variant="standard"
-            value={`${fields.allocatedAmount}`}
+            value={response.allocatedAmount}
+            defaultValue={"AllocatedAmount"}
             disabled
             InputLabelProps={{
               style: {
