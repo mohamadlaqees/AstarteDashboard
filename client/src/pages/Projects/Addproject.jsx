@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -17,6 +17,7 @@ import { addOrUpdateProjectSchema } from "../../Utils/Validations";
 import Header from "../../components/Header";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import ImageUploader from "../../components/ImageUploader";
 
 const Addproject = () => {
   const theme = useTheme();
@@ -33,10 +34,12 @@ const Addproject = () => {
       location: "",
       startingPoint: "",
       date: "",
+      image: "",
     },
     resolver: yupResolver(addOrUpdateProjectSchema),
     mode: "onBlur",
   });
+  const [imagePreviews, setImagePreviews] = useState([]);
 
   const submitHandler = (data) => {
     reset({
@@ -46,6 +49,7 @@ const Addproject = () => {
       location: "",
       startingPoint: "",
       date: "",
+      image: "",
     });
     console.log(data);
   };
@@ -311,6 +315,50 @@ const Addproject = () => {
             >
               Add Project
             </Button>
+          </Stack>
+
+          <Stack
+            width="30%"
+            marginLeft="auto"
+            marginRight="auto"
+            marginBottom="auto"
+            marginTop="auto"
+          >
+            <Box paddingBottom="20px">
+              <Header subtitle="Project image" />
+            </Box>
+
+            <Controller
+              name="image"
+              control={control}
+              render={({ field }) => (
+                <ImageUploader
+                  errorMessage={errors?.image?.message}
+                  field={field}
+                  index={0}
+                  label={"Image"}
+                  key={field.id}
+                  src={imagePreviews[0]}
+                  imagePreviews={imagePreviews}
+                  setImagePreviews={setImagePreviews}
+                  sx={{
+                    cursor: "pointer",
+                    borderRadius: "0px",
+                    width: 250,
+                    height: 250,
+                    border: `3px solid ${theme.palette.secondary.main}`,
+                  }}
+                  boxSx={{
+                    margin: "auto",
+                  }}
+                  iconSx={{
+                    width: "270px",
+                    height: "270px",
+                    borderRadius: "0px",
+                  }}
+                />
+              )}
+            />
           </Stack>
         </Box>
       </form>

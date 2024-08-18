@@ -1,46 +1,19 @@
 import { Box, Stack, TextField, useTheme } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Header from "../../components/Header";
-import TableComponent from "../../components/TableComponent";
 import { useParams } from "react-router-dom";
+import ImageUploader from "../../components/ImageUploader";
 
-const FundInfo = () => {
+const ProjectInfo = () => {
   const theme = useTheme();
-  const { fundid } = useParams();
-  const [fields, setFields] = useState({});
+  const { projectid } = useParams();
 
-  const columns = [
-    { id: "id", label: "ID", minWidth: 100 },
-    { id: "donation", label: "Dontaion", minWidth: 100 },
-    { id: "type", label: "Type", minWidth: 100 },
-    { id: "date", label: "Date", minWidth: 100 },
-  ];
-  const rows = [];
-
-  if (fields !== undefined && fields.donors !== undefined) {
-    fields.donors.map((field, index) =>
-      rows.push({
-        id: field.id,
-        donation: field.donation,
-        type: field.type,
-        date: field.date,
-      })
-    );
-  }
-
-  useEffect(() => {
-    const getData = async () => {
-      const response = await fetch("/fetchFunds.json");
-      const data = await response.json();
-      setFields(...data);
-    };
-    getData();
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <>
       <Box margin="40px">
-        <Header title="Fund" subtitle={fundid} />
+        <Header title="Project" subtitle={projectid} />
       </Box>
 
       <Box display="flex" justifyContent="space-between" width="100%">
@@ -57,7 +30,25 @@ const FundInfo = () => {
           <TextField
             label="Name"
             variant="standard"
-            value={`${fields.project?.name}`}
+            value={""}
+            disabled
+            InputLabelProps={{
+              style: {
+                color: theme.palette.secondary.main,
+                fontSize: "18px",
+              },
+            }}
+            InputProps={{
+              sx: {
+                marginBottom: "20px",
+              },
+            }}
+          />
+
+          <TextField
+            label="isEducational"
+            variant="standard"
+            value={""}
             disabled
             InputLabelProps={{
               style: {
@@ -75,7 +66,7 @@ const FundInfo = () => {
           <TextField
             label="Description"
             variant="standard"
-            value={`${fields.project?.description}`}
+            value={""}
             disabled
             InputLabelProps={{
               style: {
@@ -93,7 +84,7 @@ const FundInfo = () => {
           <TextField
             label="Location"
             variant="standard"
-            value={`${fields.project?.location}`}
+            value={""}
             disabled
             InputLabelProps={{
               style: {
@@ -111,7 +102,7 @@ const FundInfo = () => {
           <TextField
             label="StartingPoint"
             variant="standard"
-            value={`${fields.project?.startingPoint}`}
+            value={""}
             disabled
             InputLabelProps={{
               style: {
@@ -127,27 +118,9 @@ const FundInfo = () => {
           />
 
           <TextField
-            label="TotalAmount"
+            label="Data"
             variant="standard"
-            value={`${fields.totalAmount}`}
-            disabled
-            InputLabelProps={{
-              style: {
-                color: theme.palette.secondary.main,
-                fontSize: "18px",
-              },
-            }}
-            InputProps={{
-              sx: {
-                marginBottom: "20px",
-              },
-            }}
-          />
-
-          <TextField
-            label="AllocatedAmount"
-            variant="standard"
-            value={`${fields.allocatedAmount}`}
+            value={""}
             disabled
             InputLabelProps={{
               style: {
@@ -164,21 +137,43 @@ const FundInfo = () => {
         </Stack>
 
         <Stack
-          marginTop="20px"
-          width="50%"
+          width="30%"
           marginLeft="auto"
           marginRight="auto"
-          overflow="auto"
+          marginBottom="auto"
+          marginTop="auto"
         >
           <Box paddingBottom="30px">
-            <Header subtitle="Donnors info" />
+            <Header subtitle="Project image" />
           </Box>
 
-          <TableComponent rows={rows} columns={columns} theme={theme} />
+          <ImageUploader
+            key={0}
+            label={"Image"}
+            disabled={true}
+            index={0}
+            radius={"0px"}
+            src={""}
+            sx={{
+              cursor: "pointer",
+              borderRadius: "0px",
+              width: 250,
+              height: 250,
+              border: `3px solid ${theme.palette.secondary.main}`,
+            }}
+            boxSx={{
+              margin: "auto",
+            }}
+            iconSx={{
+              width: "270px",
+              height: "270px",
+              borderRadius: "0px",
+            }}
+          />
         </Stack>
       </Box>
     </>
   );
 };
 
-export default FundInfo;
+export default ProjectInfo;

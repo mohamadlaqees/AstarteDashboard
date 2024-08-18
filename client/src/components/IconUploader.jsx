@@ -21,17 +21,17 @@ const IconUploader = ({
         const newIconPreviews = [...iconPreviews];
         newIconPreviews[index] = reader.result;
         setIconPreviews(newIconPreviews);
+        field.onChange(reader.result);
       };
       reader.readAsDataURL(file);
     }
   };
 
   return (
-    <Box >
+    <Box>
       <InputLabel
         sx={{
-          marginLeft:'auto',
-          marginRight:'auto',
+          textAlign: "center",
           marginBottom: "5px",
         }}
       >
@@ -46,7 +46,6 @@ const IconUploader = ({
         id={`icon-${index}`}
         onChange={(e) => {
           handleIconChange(e, index);
-          field.onChange(src);
         }}
       />
 

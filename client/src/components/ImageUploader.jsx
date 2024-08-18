@@ -7,8 +7,9 @@ const ImageUploader = ({
   index,
   src,
   sx,
+  boxSx,
+  iconSx,
   disabled,
-  radius,
   field,
   imagePreviews = [],
   setImagePreviews = () => {},
@@ -22,17 +23,18 @@ const ImageUploader = ({
         const newImagePreviews = [...imagePreviews];
         newImagePreviews[index] = reader.result;
         setImagePreviews(newImagePreviews);
+        field.onChange(reader.result);
       };
       reader.readAsDataURL(file);
     }
   };
 
   return (
-    <Box>
+    <Box sx={boxSx}>
       <InputLabel
         sx={{
-          display: "flex",
-          justifyContent: "center",
+          textAlign: "center",
+          marginBottom: "5px",
         }}
       >
         {label}
@@ -46,19 +48,11 @@ const ImageUploader = ({
         id={`image-${index}`}
         onChange={(e) => {
           handleImageChange(e, index);
-          field.onChange(src);
         }}
       />
 
       <label htmlFor={`image-${index}`}>
-        <IconButton
-          component="span"
-          sx={{
-            width: "180px",
-            height: "180px",
-            borderRadius: `${radius}`,
-          }}
-        >
+        <IconButton component="span" sx={iconSx} disabled={disabled}>
           <Avatar
             src={src || ""}
             sx={{

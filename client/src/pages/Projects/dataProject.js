@@ -1,6 +1,6 @@
 export const dataProject = [
   {
-    _id: "63701cc1f03239c72c00017f",
+    id: "63701cc1f03239c72c00017f",
     name: "Konstantine",
     isEducational: false,
     description: "Konstantine Konstantine Konstantine",

@@ -65,6 +65,7 @@ export const addOrUpdateProjectSchema = yup.object().shape({
   location: yup.string().required("Location is required"),
   startingPoint: yup.string().required("StartingPoint is required"),
   date: yup.date().required(),
+  image: yup.string().required("Image is required"),
 });
 
 //Impact funds
