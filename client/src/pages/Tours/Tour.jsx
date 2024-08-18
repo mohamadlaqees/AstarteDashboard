@@ -2,12 +2,10 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
-  Avatar,
   Box,
   Button,
   Divider,
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
   Rating,
@@ -24,7 +22,8 @@ import dayjs from "dayjs";
 import NumberInputComponent from "../../components/NumberInputComponent";
 import { useParams } from "react-router-dom";
 import { useGetExperienceQuery } from "../../store/apiSlice/apiSlice";
-import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
+import ImageUploader from "../../components/ImageUploader";
+import IconUploader from "../../components/IconUploader";
 
 const Tour = () => {
   const { tourid } = useParams();
@@ -87,32 +86,6 @@ const Tour = () => {
     control,
     name: "includes",
   });
-
-  const handleIconChange = (e, index) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newIconPreviews = [...iconPreviews];
-        newIconPreviews[index] = reader.result;
-        setIconPreviews(newIconPreviews);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleImageChange = (e, index) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newImagePreviews = [...imagePreviews];
-        newImagePreviews[index] = reader.result;
-        setImagePreviews(newImagePreviews);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const submitHandler = (data) => {
     console.log(data);
@@ -571,9 +544,9 @@ const Tour = () => {
                   backgroundColor: theme.palette.secondary[500],
                 },
               }}
-              disabled={!isDirty || !isValid || isSubmitting}
+              disabled={!isValid || !isDirty || isSubmitting}
             >
-              Add Tour
+              Save
             </Button>
           </Stack>
 
@@ -632,56 +605,25 @@ const Tour = () => {
                       control={control}
                       name={`includes.${index}.icon`}
                       render={({ field }) => (
-                        <Box>
-                          <InputLabel
-                            sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                            }}
-                          >
-                            Icon
-                          </InputLabel>
-
-                          <input
-                            accept="image/*"
-                            style={{ display: "none" }}
-                            id={`icon-upload-${index}`}
-                            type="file"
-                            onChange={(e) => {
-                              handleIconChange(e, index);
-                              field.onChange(iconPreviews[index]);
-                            }}
-                          />
-                          <label htmlFor={`icon-upload-${index}`}>
-                            <IconButton component="span">
-                              <Avatar
-                                src={iconPreviews[index] || ""}
-                                sx={{
-                                  cursor: "pointer",
-                                  width: 56,
-                                  height: 56,
-                                  border: `3px solid ${theme.palette.secondary.main}`,
-                                  backgroundColor: iconPreviews[index]
-                                    ? "transparent"
-                                    : "grey.300",
-                                }}
-                              >
-                                {!iconPreviews[index] && <PhotoLibraryIcon />}
-                              </Avatar>
-                            </IconButton>
-                          </label>
-                          {errors?.includes?.[index]?.icon?.message && (
-                            <Typography
-                              color="error"
-                              sx={{
-                                fontSize: "11px",
-                                marginLeft: "15px",
-                              }}
-                            >
-                              {errors?.includes?.[index]?.icon?.message}
-                            </Typography>
-                          )}
-                        </Box>
+                        <IconUploader
+                          disabled={false}
+                          errorMessage={
+                            errors?.includes?.[index]?.icon?.message
+                          }
+                          field={field}
+                          index={index}
+                          label={"Icon"}
+                          src={iconPreviews[index]}
+                          sx={{
+                            cursor: "pointer",
+                            width: "56px",
+                            height: "56px",
+                            border: `3px solid ${theme.palette.secondary.main}`,
+                          }}
+                          iconPreviews={iconPreviews}
+                          key={index}
+                          setIconPreviews={setIconPreviews}
+                        />
                       )}
                     />
                   </Box>
@@ -786,66 +728,25 @@ const Tour = () => {
                       name={`media.${index}.image`}
                       control={control}
                       render={({ field }) => (
-                        <Box>
-                          <InputLabel
-                            sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                            }}
-                          >
-                            Image
-                          </InputLabel>
-
-                          <input
-                            accept="image/*"
-                            style={{ display: "none" }}
-                            type="file"
-                            id={`image-${index}`}
-                            onChange={(e) => {
-                              handleImageChange(e, index);
-                              field.onChange(imagePreviews[index]);
-                            }}
-                          />
-
-                          <label htmlFor={`image-${index}`}>
-                            <IconButton
-                              component="span"
-                              sx={{
-                                width: "180px",
-                                height: "180px",
-                                borderRadius: "0",
-                              }}
-                            >
-                              <Avatar
-                                src={imagePreviews[index] || ""}
-                                sx={{
-                                  cursor: "pointer",
-                                  borderRadius: "0px",
-                                  width: 150,
-                                  height: 150,
-                                  border: `3px solid ${theme.palette.secondary.main}`,
-                                  backgroundColor: imagePreviews[index]
-                                    ? "transparent"
-                                    : "grey.300",
-                                }}
-                              >
-                                {!imagePreviews[index] && <PhotoLibraryIcon />}
-                              </Avatar>
-                            </IconButton>
-                          </label>
-
-                          {errors?.media?.[index]?.image?.message && (
-                            <Typography
-                              color="error"
-                              sx={{
-                                fontSize: "11px",
-                                marginLeft: "15px",
-                              }}
-                            >
-                              {errors?.media?.[index]?.image?.message}
-                            </Typography>
-                          )}
-                        </Box>
+                        <ImageUploader
+                          key={index}
+                          errorMessage={errors?.media?.[index]?.image?.message}
+                          label={"Image"}
+                          disabled={false}
+                          field={field}
+                          index={index}
+                          radius={"0px"}
+                          src={imagePreviews[index]}
+                          sx={{
+                            cursor: "pointer",
+                            borderRadius: "0px",
+                            width: 150,
+                            height: 150,
+                            border: `3px solid ${theme.palette.secondary.main}`,
+                          }}
+                          imagePreviews={imagePreviews}
+                          setImagePreviews={setImagePreviews}
+                        />
                       )}
                     />
                   </Box>
