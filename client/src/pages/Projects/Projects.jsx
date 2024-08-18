@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, useTheme, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import FolderIcon from "@mui/icons-material/Folder";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Header from "../../components/Header";
@@ -10,6 +11,10 @@ import { dataProject } from "./dataProject";
 const Projects = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+
+  const handleInfo = (id) => {
+    navigate(`projectInfo/${id}`);
+  };
 
   const handleEdit = (id) => {
     navigate(`${id}`);
@@ -21,14 +26,14 @@ const Projects = () => {
 
   const columns = [
     {
-      field: "_id",
+      field: "id",
       headerName: "ID",
       flex: 1,
     },
     {
       field: "name",
       headerName: "Name",
-      flex: 1,
+      flex: 0.5,
     },
     {
       field: "isEducational",
@@ -43,39 +48,46 @@ const Projects = () => {
     {
       field: "location",
       headerName: "Location",
-      flex: 1,
+      flex: 0.5,
     },
     {
       field: "startingPoint",
       headerName: "StartingPoint",
-      flex: 1,
+      flex: 0.5,
     },
     {
       field: "createdAt",
       headerName: "CreatedAt",
-      flex: 1,
+      flex: 0.5,
     },
     {
       field: "updatedAt",
       headerName: "UpdatedAt",
-      flex: 1,
+      flex: 0.5,
     },
     {
       field: "actions",
       headerName: "Actions",
-      flex: 0.5,
+      flex: 1,
       sortable: false,
       renderCell: (params) => {
         return (
           <Box>
             <IconButton
-              onClick={() => handleEdit(params.row._id)}
+              title="show details"
+              onClick={() => handleInfo(params.row.id)}
+              color="secondary"
+            >
+              <FolderIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => handleEdit(params.row.id)}
               color="secondary"
             >
               <EditIcon />
             </IconButton>
             <IconButton
-              onClick={() => handleDelete(params.row._id)}
+              onClick={() => handleDelete(params.row.id)}
               color="secondary"
             >
               <DeleteIcon />
@@ -119,7 +131,7 @@ const Projects = () => {
       >
         <DataGrid
           // loading={isLoading || !data}
-          getRowId={(row) => row._id}
+          getRowId={(row) => row.id}
           rows={dataProject || []}
           columns={columns}
         />

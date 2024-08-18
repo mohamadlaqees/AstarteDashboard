@@ -1,10 +1,12 @@
 import { Box, Stack, TextField, useTheme } from "@mui/material";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import TableComponent from "../../components/TableComponent";
+import { useParams } from "react-router-dom";
 
 const FundInfo = () => {
   const theme = useTheme();
+  const { fundid } = useParams();
   const [fields, setFields] = useState({});
 
   const columns = [
@@ -26,7 +28,6 @@ const FundInfo = () => {
     );
   }
 
-  // just for testing
   useEffect(() => {
     const getData = async () => {
       const response = await fetch("/fetchFunds.json");
@@ -39,7 +40,7 @@ const FundInfo = () => {
   return (
     <>
       <Box margin="40px">
-        <Header title="Fund" subtitle={fields.id} />
+        <Header title="Fund" subtitle={fundid} />
       </Box>
 
       <Box display="flex" justifyContent="space-between" width="100%">
