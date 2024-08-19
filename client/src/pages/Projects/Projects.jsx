@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, useTheme, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import FolderIcon from "@mui/icons-material/Folder";
@@ -6,11 +6,19 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
-import { dataProject } from "./dataProject";
+import {
+  useDeleteProjectMutation,
+  useGetAllProjectsQuery,
+} from "../../store/apiSlice/apiSlice";
+import { LoadingButton } from "@mui/lab";
 
 const Projects = () => {
   const theme = useTheme();
+  const { data: projects, isLoading, refetch } = useGetAllProjectsQuery();
+  const [deleteProject, { isError, isLoading: deleteLoading, isSuccess }] =
+    useDeleteProjectMutation();
   const navigate = useNavigate();
+  const [loadingId, setLoadingId] = useState(null);
 
   const handleInfo = (id) => {
     navigate(`projectInfo/${id}`);
@@ -20,8 +28,12 @@ const Projects = () => {
     navigate(`${id}`);
   };
 
-  const handleDelete = (id) => {
-    console.log(`Delete user with ID: ${id}`);
+  const handleDelete = async (id) => {
+    setLoadingId(id);
+    try {
+      await deleteProject(id).unwrap();
+      refetch();
+    } catch (error) {}
   };
 
   const columns = [
@@ -89,8 +101,22 @@ const Projects = () => {
             <IconButton
               onClick={() => handleDelete(params.row.id)}
               color="secondary"
+              disableRipple={deleteLoading}
+              disableFocusRipple={deleteLoading}
+              sx={{
+                width: "40px",
+              }}
             >
-              <DeleteIcon />
+              {loadingId === params.row.id ? (
+                <LoadingButton
+                  variant="text"
+                  loading
+                  sx={{ width: "20px" }}
+                  loadingPosition="center"
+                ></LoadingButton>
+              ) : (
+                <DeleteIcon />
+              )}
             </IconButton>
           </Box>
         );
@@ -98,6 +124,9 @@ const Projects = () => {
     },
   ];
 
+  useEffect(() => {
+    refetch();
+  }, []);
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="Projects" subtitle="List of Projects" />
@@ -130,9 +159,9 @@ const Projects = () => {
         }}
       >
         <DataGrid
-          // loading={isLoading || !data}
+          loading={isLoading}
           getRowId={(row) => row.id}
-          rows={dataProject || []}
+          rows={projects?.results || []}
           columns={columns}
         />
       </Box>

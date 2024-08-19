@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -15,18 +16,30 @@ import {
 } from "@mui/material";
 import { addOrUpdateProjectSchema } from "../../Utils/Validations";
 import Header from "../../components/Header";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import ImageUploader from "../../components/ImageUploader";
+import {
+  useGetProjectQuery,
+  useUpdateProjectMutation,
+} from "../../store/apiSlice/apiSlice";
+import { LoadingButton } from "@mui/lab";
 
 const Project = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const { projectid } = useParams();
+  const { data: project, isLoading, refetch } = useGetProjectQuery(projectid);
+  console.log(project);
+  const [updateProject, { isError, isLoading: updateLoading, isSuccess }] =
+    useUpdateProjectMutation();
+
   const {
     control,
     handleSubmit,
     formState: { errors, isDirty, isValid, isSubmitting },
+    reset,
   } = useForm({
     defaultValues: {
       name: "",
@@ -41,11 +54,44 @@ const Project = () => {
   });
   const [imagePreviews, setImagePreviews] = useState([]);
 
-  const submitHandler = (data) => {
+  const submitHandler = async (data) => {
+    try {
+      await updateProject({ updatedProject: data, id: projectid })
+        .unwrap()
+        .then(() => {
+          navigate("/projects");
+        });
+    } catch (error) {}
+
     console.log(data);
   };
 
-  return (
+  useEffect(() => {
+    refetch();
+    if (project) {
+      reset({
+        name: project?.document.name || "",
+        description: project?.document.description || "available",
+        location: project?.document.location || 0,
+        startingPoint: project?.document.startingPoint || "",
+        isEducational: project?.document.isEducational,
+        date: project?.document.createdAt || "",
+        // image:project?.document?.image           there is no image yet in the hosted backEnd data
+      });
+    }
+  }, [project]);
+
+  return isLoading ? (
+    <CircularProgress
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "55%",
+      }}
+      size={60}
+      thickness={3}
+    />
+  ) : (
     <>
       <Box margin="40px">
         <Header
@@ -134,8 +180,8 @@ const Project = () => {
                       },
                     }}
                   >
-                    <MenuItem value={"True"}>True</MenuItem>
-                    <MenuItem value={"False"}>False</MenuItem>
+                    <MenuItem value={"true"}>True</MenuItem>
+                    <MenuItem value={"false"}>False</MenuItem>
                   </Select>
                   {errors?.isEducational?.message && (
                     <Typography
@@ -307,7 +353,18 @@ const Project = () => {
               }}
               disabled={!isDirty || !isValid || isSubmitting}
             >
-              Save
+              {isSubmitting ? (
+                <LoadingButton
+                  variant="text"
+                  loading
+                  sx={{ width: "130px" }}
+                  loadingPosition="start"
+                >
+                  Save
+                </LoadingButton>
+              ) : (
+                "Save"
+              )}{" "}
             </Button>
           </Stack>
 

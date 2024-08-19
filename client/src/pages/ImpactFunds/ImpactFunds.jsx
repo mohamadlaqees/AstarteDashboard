@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, useTheme, IconButton, Collapse, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import FolderIcon from "@mui/icons-material/Folder";
@@ -8,11 +8,20 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
-import { dataFunds } from "./dataFunds";
+import {
+  useDeleteFundMutation,
+  useGetAllImpactFundsQuery,
+} from "../../store/apiSlice/apiSlice";
+import { LoadingButton } from "@mui/lab";
 
 const ImpactFunds = () => {
   const theme = useTheme();
+  const { data: funds, isLoading, refetch } = useGetAllImpactFundsQuery();
+  console.log(funds)
+  const [deleteFund, { isError, isLoading: deleteLoading, isSuccess }] =
+    useDeleteFundMutation();
   const navigate = useNavigate();
+  const [loadingId, setLoadingId] = useState(null);
 
   const handleInfo = (id) => {
     navigate(`fundInfo/${id}`);
@@ -22,8 +31,12 @@ const ImpactFunds = () => {
     navigate(`${id}`);
   };
 
-  const handleDelete = (id) => {
-    console.log(`Delete user with ID: ${id}`);
+  const handleDelete = async (id) => {
+    setLoadingId(id);
+    try {
+      await deleteFund(id).unwrap();
+      refetch();
+    } catch (error) {}
   };
 
   const DonorCell = ({ donor }) => {
@@ -47,7 +60,6 @@ const ImpactFunds = () => {
                 <Typography variant="body2">
                   Donation: {item.donation}
                 </Typography>
-                <Typography variant="body2">Type: {item.type}</Typography>
                 <Typography variant="body2">Date: {item.date}</Typography>
               </Box>
             ) : (
@@ -59,28 +71,34 @@ const ImpactFunds = () => {
     );
   };
 
+  const flattenedFunds =
+    funds?.results.map((fund) => ({
+      id: fund.id,
+      projectName: fund.project?.name || "N/A",
+      description: fund.project?.description || "N/A",
+      location: fund.project?.location || "N/A",
+      startingPoint: fund.project?.startingPoint || "N/A",
+      isEducational: fund.project?.isEducational ? "Yes" : "No",
+      projectId: fund.project?.id || "N/A",
+      totalAmount: fund.totalAmount || 0,
+      allocatedAmount: fund.allocatedAmount || 0,
+      donors: fund.donors || [],
+    })) || [];
+
   const columns = [
     {
       field: "id",
       headerName: "ID",
       flex: 1,
     },
-    {
-      field: "project",
-      headerName: "Project Name",
-      flex: 1,
-      valueGetter: (params) => params.name,
-    },
-    {
-      field: "totalAmount",
-      headerName: "TotalAmount",
-      flex: 0.5,
-    },
-    {
-      field: "allocatedAmount",
-      headerName: "AllocatedAmount",
-      flex: 0.5,
-    },
+    { field: "projectName", headerName: "Project Name", flex: 0.5 },
+    { field: "description", headerName: "Description", flex: 1 },
+    { field: "location", headerName: "Location", flex: 0.5 },
+    { field: "startingPoint", headerName: "Starting Point", flex: 0.5 },
+    { field: "isEducational", headerName: "Is Educational", flex: 0.5 },
+    { field: "projectId", headerName: "Project ID", flex: 1 },
+    { field: "totalAmount", headerName: "Total Amount", flex: 0.5 },
+    { field: "allocatedAmount", headerName: "Allocated Amount", flex: 0.5 },
     {
       field: "donors",
       headerName: "Donors",
@@ -111,14 +129,32 @@ const ImpactFunds = () => {
             <IconButton
               onClick={() => handleDelete(params.row.id)}
               color="secondary"
+              disableRipple={deleteLoading}
+              disableFocusRipple={deleteLoading}
+              sx={{
+                width: "40px",
+              }}
             >
-              <DeleteIcon />
+              {loadingId === params.row.id ? (
+                <LoadingButton
+                  variant="text"
+                  loading
+                  sx={{ width: "20px" }}
+                  loadingPosition="center"
+                ></LoadingButton>
+              ) : (
+                <DeleteIcon />
+              )}
             </IconButton>
           </Box>
         );
       },
     },
   ];
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -157,9 +193,9 @@ const ImpactFunds = () => {
         }}
       >
         <DataGrid
-          // loading={isLoading || !data}
+          loading={isLoading}
           getRowId={(row) => row.id}
-          rows={dataFunds || []}
+          rows={flattenedFunds || []}
           columns={columns}
           getRowHeight={() => "auto"}
         />

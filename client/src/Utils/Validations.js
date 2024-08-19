@@ -69,14 +69,8 @@ export const addOrUpdateProjectSchema = yup.object().shape({
 });
 
 //Impact funds
-export const addFundSchema = yup.object().shape({
-  project: yup.object().shape({
-    name: yup.string().required("Name is required"),
-    description: yup.string().required("Description is required"),
-    location: yup.string().required("Location is required"),
-    startingPoint: yup.string().required("StartingPoint is required"),
-    date: yup.date().required(),
-  }),
+export const addOrUpdateFundSchema = yup.object().shape({
+  project: yup.string().required("Project is required"),
   totalAmount: yup.number().required("TotalAmount is required"),
   allocatedAmount: yup.number().required("AllocatedAmount is required"),
   donors: yup.array().of(
@@ -90,7 +84,6 @@ export const addFundSchema = yup.object().shape({
               value || ""
             }').`
         ),
-      type: yup.string().required("Type is required"),
     })
   ),
 });

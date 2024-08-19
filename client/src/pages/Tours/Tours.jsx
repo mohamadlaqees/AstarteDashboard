@@ -1,5 +1,8 @@
-import React from "react";
-import { useGetAllExperiencesQuery } from "../../store/apiSlice/apiSlice";
+import React, { useEffect, useState } from "react";
+import {
+  useDeleteExperienceMutation,
+  useGetAllExperiencesQuery,
+} from "../../store/apiSlice/apiSlice";
 import { Box, Collapse, IconButton, Typography, useTheme } from "@mui/material";
 import Header from "../../components/Header";
 import { DataGrid } from "@mui/x-data-grid";
@@ -9,12 +12,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useNavigate } from "react-router-dom";
+import { LoadingButton } from "@mui/lab";
 
 const Tours = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { data: experiences, isLoading } = useGetAllExperiencesQuery();
-  console.log(experiences);
+  const { data: experiences, isLoading, refetch } = useGetAllExperiencesQuery();
+  const [deleteExperience, { isError, isLoading: deleteLoading, isSuccess }] =
+    useDeleteExperienceMutation();
+  const [loadingId, setLoadingId] = useState(null);
 
   const handleInfo = (id) => {
     navigate(`tourInfo/${id}`);
@@ -25,8 +31,12 @@ const Tours = () => {
     console.log(`Edit user with ID: ${id}`);
   };
 
-  const handleDelete = (id) => {
-    console.log(`Delete user with ID: ${id}`);
+  const handleDelete = async (id) => {
+    setLoadingId(id);
+    try {
+      await deleteExperience(id).unwrap();
+      refetch();
+    } catch (error) {}
   };
 
   const ItineraryCell = ({ itinerary }) => {
@@ -131,8 +141,22 @@ const Tours = () => {
             <IconButton
               onClick={() => handleDelete(params.row.id)}
               color="secondary"
+              disableRipple={deleteLoading}
+              disableFocusRipple={deleteLoading}
+              sx={{
+                width: "40px",
+              }}
             >
-              <DeleteIcon />
+              {loadingId === params.row.id ? (
+                <LoadingButton
+                  variant="text"
+                  loading
+                  sx={{ width: "20px" }}
+                  loadingPosition="center"
+                ></LoadingButton>
+              ) : (
+                <DeleteIcon />
+              )}
             </IconButton>
           </Box>
         );

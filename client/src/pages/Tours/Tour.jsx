@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   FormControl,
   InputLabel,
@@ -21,14 +22,26 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import NumberInputComponent from "../../components/NumberInputComponent";
 import { useParams } from "react-router-dom";
-import { useGetExperienceQuery } from "../../store/apiSlice/apiSlice";
+import {
+  useGetExperienceQuery,
+  useUpdateExperienceMutation,
+} from "../../store/apiSlice/apiSlice";
 import ImageUploader from "../../components/ImageUploader";
 import IconUploader from "../../components/IconUploader";
+import { LoadingButton } from "@mui/lab";
 
 const Tour = () => {
   const { tourid } = useParams();
   const theme = useTheme();
-  const { data: experience } = useGetExperienceQuery(tourid);
+  const {
+    data: experience,
+    isLoading,
+    refetch,
+  } = useGetExperienceQuery(tourid);
+  const [
+    updateExperience,
+    { isLoading: updateLoading, isSuccess, isError, error },
+  ] = useUpdateExperienceMutation();
 
   const {
     control,
@@ -87,11 +100,15 @@ const Tour = () => {
     name: "includes",
   });
 
-  const submitHandler = (data) => {
+  const submitHandler = async (data) => {
+    try {
+      await updateExperience({ updatedExperience: data, id: tourid }).unwrap();
+    } catch (error) {}
     console.log(data);
   };
 
   useEffect(() => {
+    refetch();
     if (experience) {
       reset({
         title: experience?.document.title || "",
@@ -108,7 +125,7 @@ const Tour = () => {
         })),
         includes: experience?.document?.includes.map((include) => ({
           description: include.description || "",
-          location: include.icon || "",
+          icon: include.icon || "",
         })),
         media: experience?.document?.media.map((media) => ({
           image: media,
@@ -121,7 +138,17 @@ const Tour = () => {
     }
   }, [experience, reset]);
 
-  return (
+  return isLoading ? (
+    <CircularProgress
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "55%",
+      }}
+      size={60}
+      thickness={3}
+    />
+  ) : (
     <>
       <Box margin="40px">
         <Header title={`Tour : ${tourid}`} subtitle="Update tour info" />
@@ -546,7 +573,18 @@ const Tour = () => {
               }}
               disabled={!isValid || !isDirty || isSubmitting}
             >
-              Save
+              {isSubmitting ? (
+                <LoadingButton
+                  variant="text"
+                  loading
+                  sx={{ width: "130px" }}
+                  loadingPosition="start"
+                >
+                  Save{" "}
+                </LoadingButton>
+              ) : (
+                "Save"
+              )}{" "}
             </Button>
           </Stack>
 
@@ -557,7 +595,7 @@ const Tour = () => {
             marginRight="auto"
             overflow="auto"
           >
-            <Box>
+            <Box maxHeight={"300px"} overflow={"auto"}>
               <Box marginBottom="20px">
                 <Header subtitle="Includes" />
               </Box>
@@ -613,12 +651,16 @@ const Tour = () => {
                           field={field}
                           index={index}
                           label={"Icon"}
-                          src={iconPreviews[index]}
+                          src={iconPreviews[index] || field.value}
                           sx={{
                             cursor: "pointer",
                             width: "56px",
                             height: "56px",
                             border: `3px solid ${theme.palette.secondary.main}`,
+                          }}
+                          iconSx={{
+                            width: "76px",
+                            height: "76px",
                           }}
                           iconPreviews={iconPreviews}
                           key={index}
@@ -672,7 +714,7 @@ const Tour = () => {
 
             <Divider sx={{ marginTop: "50px" }} />
 
-            <Box marginTop="40px">
+            <Box marginTop="40px" maxHeight={"300px"} overflow={"auto"}>
               <Box marginBottom="20px">
                 <Header subtitle="Media" />
               </Box>
@@ -736,13 +778,18 @@ const Tour = () => {
                           field={field}
                           index={index}
                           radius={"0px"}
-                          src={imagePreviews[index]}
+                          src={imagePreviews[index] || field.value}
                           sx={{
                             cursor: "pointer",
                             borderRadius: "0px",
                             width: 150,
                             height: 150,
                             border: `3px solid ${theme.palette.secondary.main}`,
+                          }}
+                          iconSx={{
+                            width: "170px",
+                            height: "170px",
+                            borderRadius: "0px",
                           }}
                           imagePreviews={imagePreviews}
                           setImagePreviews={setImagePreviews}
