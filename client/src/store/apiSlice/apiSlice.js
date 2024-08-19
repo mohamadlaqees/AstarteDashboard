@@ -8,6 +8,23 @@ export const apiSlice = createApi({
   }),
 
   endpoints: (build) => ({
+    //logIN
+    logIn: build.mutation({
+      query: (userInfo) => ({
+        url: "auth/login",
+        method: "POST",
+        body: userInfo,
+      }),
+    }),
+    getToken: build.query({
+      query: () => "auth/refresh-token",
+    }),
+    logOut: build.mutation({
+      query: () => ({
+        url: "auth/logout",
+      }),
+    }),
+
     //experiences
     getAllExperiences: build.query({
       query: () => "experiences",
@@ -110,4 +127,7 @@ export const {
   useAddFundMutation,
   useUpdateFundMutation,
   useDeleteFundMutation,
+  useLogInMutation,
+  useLogOutMutation,
+  useGetTokenQuery,
 } = apiSlice;

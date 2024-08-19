@@ -10,6 +10,15 @@ export const userProfileSchema = yup.object().shape({
     .required("Email is required"),
 });
 
+//Login
+export const logInSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Please enter a valid email address")
+    .required("Email is required"),
+  password: yup.string().min(8).required("Password is required"),
+});
+
 //Experience
 export const addOrUpdateExperienceSchema = yup.object().shape({
   title: yup.string().required("Title is required"),

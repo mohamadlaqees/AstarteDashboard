@@ -24,16 +24,30 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import { useLogOutMutation } from "../store/apiSlice/apiSlice";
+import { useNavigate } from "react-router-dom";
+import { LoadingButton } from "@mui/lab";
 
 const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const [logOut, { isLoading }] = useLogOutMutation();
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const isOpen = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
+  const logOutHandler = async () => {
+    try {
+      await logOut()
+        .unwrap()
+        .then(() => {
+          navigate("/logIn");
+        });
+    } catch (error) {}
+  };
   return (
     <AppBar
       sx={{
@@ -140,7 +154,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
           </MenuItem>
 
           <MenuItem
-            onClick={handleClose}
+            onClick={logOutHandler}
             sx={{
               display: "flex",
               justifyContent: "space-between",
@@ -148,7 +162,16 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
             }}
           >
             Log out
-            <Logout sx={{ marginLeft: "50px" }} />
+            {isLoading ? (
+              <LoadingButton
+                variant="text"
+                loading
+                sx={{ width: "30px" }}
+                loadingPosition="end"
+              ></LoadingButton>
+            ) : (
+              <Logout sx={{ marginLeft: "50px" }} />
+            )}
           </MenuItem>
         </Menu>
       </Toolbar>
