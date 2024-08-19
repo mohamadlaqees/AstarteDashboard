@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   Box,
   Divider,
@@ -20,49 +20,52 @@ const TourInfo = () => {
   const theme = useTheme();
   const { tourid } = useParams();
   const { data: experience, isLoading } = useGetExperienceQuery(tourid);
+  const [fields, setFields] = useState([]);
+  const [response, setResponse] = useState({});
 
   const columns = [
     { id: "description", label: "Description", minWidth: 100 },
     { id: "icon", label: "Icon", minWidth: 100 },
   ];
-  const rows = [];
 
-  const response = {
-    title: experience?.document?.title,
-    description: experience?.document?.description,
-    duration: experience?.document?.duration,
-    rating: experience?.document?.rating,
-    bookedSeats: experience?.document?.bookedSeats,
-    registrationStartDate: experience?.document?.registrationStartDate,
-    registrationEndDate: experience?.document?.registrationEndDate,
-    itinerary: experience?.document?.itinerary,
-    includes: experience?.document?.includes,
-    media: experience?.document?.media,
-    status: experience?.document?.status,
-  };
+  const rows = fields.map((field, index) => ({
+    description: field.description,
+    icon: (
+      <IconUploader
+        label={"icon"}
+        disabled={true}
+        index={index}
+        key={index}
+        src={field.icon}
+        sx={{
+          width: 56,
+          height: 56,
 
-  if (response !== undefined && response.includes !== undefined) {
-    response.includes.map((field, index) => {
-      rows.push({
-        description: field.description,
-        icon: (
-          <IconUploader
-            label={"icon"}
-            disabled={true}
-            index={index}
-            key={index}
-            src={field.icon}
-            sx={{
-              width: 56,
-              height: 56,
+          border: `3px solid ${theme.palette.secondary.main}`,
+        }}
+      />
+    ),
+  }));
 
-              border: `3px solid ${theme.palette.secondary.main}`,
-            }}
-          />
-        ),
-      });
+  useEffect(() => {
+    refetch();
+    if (experience?.document?.includes) {
+      setFields(experience.document.includes);
+    }
+    setResponse({
+      title: experience?.document?.title,
+      description: experience?.document?.description,
+      duration: experience?.document?.duration,
+      rating: experience?.document?.rating,
+      bookedSeats: experience?.document?.bookedSeats,
+      registrationStartDate: experience?.document?.registrationStartDate,
+      registrationEndDate: experience?.document?.registrationEndDate,
+      itinerary: experience?.document?.itinerary,
+      includes: experience?.document?.includes,
+      media: experience?.document?.media,
+      status: experience?.document?.status,
     });
-  }
+  }, []);
   return isLoading ? (
     <CircularProgress
       sx={{
