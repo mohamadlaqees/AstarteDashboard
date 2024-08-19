@@ -33,7 +33,11 @@ import { LoadingButton } from "@mui/lab";
 const Tour = () => {
   const { tourid } = useParams();
   const theme = useTheme();
-  const { data: experience, isLoading } = useGetExperienceQuery(tourid);
+  const {
+    data: experience,
+    isLoading,
+    refetch,
+  } = useGetExperienceQuery(tourid);
   const [
     updateExperience,
     { isLoading: updateLoading, isSuccess, isError, error },
@@ -104,6 +108,7 @@ const Tour = () => {
   };
 
   useEffect(() => {
+    refetch();
     if (experience) {
       reset({
         title: experience?.document.title || "",
