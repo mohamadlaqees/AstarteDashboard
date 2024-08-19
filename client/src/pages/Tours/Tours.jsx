@@ -144,7 +144,7 @@ const Tours = () => {
               disableRipple={deleteLoading}
               disableFocusRipple={deleteLoading}
               sx={{
-                width:'40px'
+                width: "40px",
               }}
             >
               {loadingId === params.row.id ? (
