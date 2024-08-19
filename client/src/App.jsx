@@ -25,13 +25,20 @@ import FundInfo from "./pages/ImpactFunds/FundInfo";
 import Fund from "./pages/ImpactFunds/Fund";
 import TourInfo from "./pages/Tours/TourInfo";
 import ProjectInfo from "./pages/Projects/ProjectInfo";
+import LogIn from "./pages/Login/LogIn";
 
 const App = () => {
   const { theme } = useMode();
 
   const routes = createBrowserRouter([
     {
+      path: "/logIn",
+      element: <LogIn />,
+    },
+
+    {
       element: <Layout />,
+      path: "/",
       children: [
         {
           index: true,
